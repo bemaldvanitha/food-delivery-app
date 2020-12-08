@@ -1,0 +1,48 @@
+import {Users} from '../../Data/dummy-data';
+import {TOGGLE_FAVORITE_FOODS,TOGGLE_FAVORITE_SHOPS} from '../actions/UsersAction'
+
+const initState = {
+    users: Users
+}
+
+const UsersReducer = (state = initState,action) => {
+    switch (action.type){
+        case TOGGLE_FAVORITE_SHOPS:
+
+            const favIndex = state.users.find(user => user.id === action.payload.userId).favoriteShopIds.findIndex(favId => favId === action.payload.shopId);
+            const user = state.users.find(user => user.id === action.payload.userId);
+            const userIndex = state.users.findIndex(user => user.id === action.payload.userId);
+            if(favIndex === -1){
+
+                user.favoriteShopIds.push(action.payload.shopId);
+                const users = state.users.splice(userIndex,1);
+                return {...state,users: users.concat(user)}
+            }else{
+
+                user.favoriteShopIds.splice(favIndex,1);
+                const users = [...state.users];
+                users.splice(userIndex,1);
+                return {...state,users: users.concat(user)}
+            }
+        case TOGGLE_FAVORITE_FOODS:
+
+            const favoIndex = state.users.find(user => user.id === action.payload.userId).favoriteFoodIds.findIndex(favId => favId === action.payload.foodId);
+            const curUser = state.users.find(user => user.id === action.payload.userId);
+            const curUserIndex = state.users.findIndex(user => user.id === action.payload.userId);
+            if(favoIndex === -1){
+
+                curUser.favoriteFoodIds.push(action.payload.foodId);
+                const users = state.users.splice(curUserIndex,1);
+                return {...state,users: users.concat(curUser)}
+            }else{
+
+                curUser.favoriteFoodIds.splice(favoIndex,1);
+                const users = [...state.users];
+                users.splice(curUserIndex,1);
+                return {...state,users: users.concat(curUser)}
+            }
+        default: return state;
+    }
+}
+
+export default UsersReducer;

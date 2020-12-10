@@ -29,8 +29,7 @@ const SettingsScreen = (props) => {
             <View style={styles.userDetail}>
                 <Avatar.Image size={140} source={{uri: curUser.imageUrl}}/>
                 <TouchableOpacity onPress={() => {
-                    console.log('fuck');
-                    props.navigation.navigate({routeName: 'edituser'})
+                    props.navigation.navigate({routeName: 'edituser',params: {userId: curUser.id}})
                 }}>
                     <View style={styles.customButton}>
                         <Text style={styles.customButtonText}>Edit Account</Text>

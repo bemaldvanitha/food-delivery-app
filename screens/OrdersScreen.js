@@ -1,12 +1,23 @@
 import React from 'react';
-import {View, StyleSheet, Text, Platform} from 'react-native';
+import {View, StyleSheet, Text, Platform,FlatList} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
+import {useSelector} from 'react-redux';
+
 import {Colors} from "../constants/Colors";
+import UserOrder from "../components/OrderItem";
 
 const OrderScreen = (props) => {
+    const currentOrders = useSelector(state => state.order.orders);
+    console.log(currentOrders);
     return(
         <View style={styles.screen}>
-            <Text>Order Screen</Text>
+            <FlatList data={currentOrders} keyExtractor={(item,index) => item.id} renderItem={(data) => {
+                return(
+                    <UserOrder id={data.item.id} date={data.item.date} isDeliverAccept={data.item.isDeliverAccept} isDeliverCompleted={data.item.isDeliverCompleted}
+                               isShopAccept={data.item.isShopAccept} isShopCompleted={data.item.isShopCompleted} items={data.item.items} shopId={data.item.shopId}
+                               totalAmount={data.item.totalAmount} />
+                )
+            }}/>
         </View>
     )
 }
@@ -27,9 +38,7 @@ OrderScreen.navigationOptions = navData => {
 
 const styles = StyleSheet.create({
     screen: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
+
     }
 })
 

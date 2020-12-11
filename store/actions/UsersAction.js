@@ -23,7 +23,6 @@ export const toggleFavoriteFoods = (userId,foodId) => {
 }
 
 export const editUser = (userId,firstName,lastName,email,address,telNumber,imageUrl,location,isDeliveryMan,isShopOwner) => {
-    console.log(firstName);
     return{
         type: EDIT_USER,
         payload: {

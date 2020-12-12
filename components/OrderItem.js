@@ -1,8 +1,7 @@
 import React from 'react';
-import {View,StyleSheet,Text,ImageBackground,Dimensions} from 'react-native';
+import {View,StyleSheet,Text,ImageBackground,Dimensions,TouchableNativeFeedback} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import {Colors} from '../constants/Colors';
 import OrderedFoodItem from "./OrderedFoodItem";
 
 const screenWidth = Dimensions.get('screen').width;
@@ -11,53 +10,55 @@ const screenHeight = Dimensions.get('screen').height;
 const UserOrder = (props) => {
     const orderedShop = useSelector(state => state.shop.shops).find(shop => shop.id === props.shopId);
     return(
-        <View style={styles.container}>
-            <View style={styles.box}>
-                <ImageBackground style={styles.imageBackground} source={{uri: orderedShop.imageUrl}}>
-                    <Text style={styles.shopName}>{orderedShop.name}</Text>
-                </ImageBackground>
+        <TouchableNativeFeedback onPress={props.onSelect}>
+            <View style={styles.container}>
+                <View style={styles.box}>
+                    <ImageBackground style={styles.imageBackground} source={{uri: orderedShop.imageUrl}}>
+                        <Text style={styles.shopName}>{orderedShop.name}</Text>
+                    </ImageBackground>
+                </View>
+                <View style={styles.mainDetailContainer}>
+                    <Text style={styles.price}>{props.totalAmount} $</Text>
+                    <Text style={styles.date}>{props.date.toString().substring(3,25)}</Text>
+                </View>
+                <View style={styles.subDetailContainer}>
+                    {
+                        !props.isShopAccept && <View style={styles.otherTextContainer}>
+                            <Text style={styles.otherText}>Shop Accepted</Text>
+                            <Text style={styles.otherText2}> { props.isShopAccept ? 'yes' : 'no' }</Text>
+                        </View>
+                    }
+                    {
+                        props.isShopAccept && <View style={styles.otherTextContainer}>
+                            <Text style={styles.otherText}>Shop Completed</Text>
+                            <Text style={styles.otherText2}>  { props.isShopCompleted ? 'yes' : 'no' }</Text>
+                        </View>
+                    }
+                    {
+                        !props.isDeliverAccept && <View style={styles.otherTextContainer}>
+                            <Text style={styles.otherText}>Rider Accepted</Text>
+                            <Text style={styles.otherText2}>  { props.isDeliverAccept ? 'yes' : 'no' }</Text>
+                        </View>
+                    }
+                    {
+                        props.isDeliverAccept && <View style={styles.otherTextContainer}>
+                            <Text style={styles.otherText}>Rider Completed</Text>
+                            <Text style={styles.otherText2}>  { props.isDeliverCompleted ? 'yes' : 'no' }</Text>
+                        </View>
+                    }
+                </View>
+                <View>
+                    {
+                        props.items.map(orderedItem => {
+                          return(
+                              <OrderedFoodItem key={orderedItem.foodId} id={orderedItem.foodId} foodName={orderedItem.foodName}
+                                               price={orderedItem.price} quantity={orderedItem.quantity} size={orderedItem.size}/>
+                          )
+                        })
+                    }
+                </View>
             </View>
-            <View style={styles.mainDetailContainer}>
-                <Text style={styles.price}>{props.totalAmount} $</Text>
-                <Text style={styles.date}>{props.date.toString().substring(3,25)}</Text>
-            </View>
-            <View style={styles.subDetailContainer}>
-                {
-                    !props.isShopAccept && <View style={styles.otherTextContainer}>
-                        <Text style={styles.otherText}>Shop Accepted</Text>
-                        <Text style={styles.otherText2}> { props.isShopAccept ? 'yes' : 'no' }</Text>
-                    </View>
-                }
-                {
-                    props.isShopAccept && <View style={styles.otherTextContainer}>
-                        <Text style={styles.otherText}>Shop Completed</Text>
-                        <Text style={styles.otherText2}>  { props.isShopCompleted ? 'yes' : 'no' }</Text>
-                    </View>
-                }
-                {
-                    !props.isDeliverAccept && <View style={styles.otherTextContainer}>
-                        <Text style={styles.otherText}>Rider Accepted</Text>
-                        <Text style={styles.otherText2}>  { props.isDeliverAccept ? 'yes' : 'no' }</Text>
-                    </View>
-                }
-                {
-                    props.isDeliverAccept && <View style={styles.otherTextContainer}>
-                        <Text style={styles.otherText}>Rider Completed</Text>
-                        <Text style={styles.otherText2}>  { props.isDeliverCompleted ? 'yes' : 'no' }</Text>
-                    </View>
-                }
-            </View>
-            <View>
-                {
-                    props.items.map(orderedItem => {
-                      return(
-                          <OrderedFoodItem key={orderedItem.foodId} id={orderedItem.foodId} foodName={orderedItem.foodName}
-                                           price={orderedItem.price} quantity={orderedItem.quantity} size={orderedItem.size}/>
-                      )
-                    })
-                }
-            </View>
-        </View>
+        </TouchableNativeFeedback>
     )
 }
 
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.26,
         shadowRadius: 10,
         elevation: 5,
-        backgroundColor: '#fff2des'
+        backgroundColor: '#fff2de'
     },
     box: {
       alignItems: 'center',

@@ -8,14 +8,16 @@ import UserOrder from "../components/OrderItem";
 
 const OrderScreen = (props) => {
     const currentOrders = useSelector(state => state.order.orders);
-    console.log(currentOrders);
+
     return(
         <View style={styles.screen}>
             <FlatList data={currentOrders} keyExtractor={(item,index) => item.id} renderItem={(data) => {
                 return(
                     <UserOrder id={data.item.id} date={data.item.date} isDeliverAccept={data.item.isDeliverAccept} isDeliverCompleted={data.item.isDeliverCompleted}
                                isShopAccept={data.item.isShopAccept} isShopCompleted={data.item.isShopCompleted} items={data.item.items} shopId={data.item.shopId}
-                               totalAmount={data.item.totalAmount} />
+                               totalAmount={data.item.totalAmount} onSelect={() => {
+                                   props.navigation.navigate({routeName: 'orderDetail',params: {id: data.item.id}})
+                    }}/>
                 )
             }}/>
         </View>

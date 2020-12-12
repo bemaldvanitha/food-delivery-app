@@ -5,6 +5,7 @@ import {useSelector} from 'react-redux';
 import OrderedFoodItem from "../components/OrderedFoodItem";
 import {Colors} from '../constants/Colors';
 import OrderStatus from "../components/OrderStatus";
+import OrderMap from "../components/OrderMap";
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -30,7 +31,7 @@ const OrderDetailScreen = (props) => {
                 <OrderStatus isShopAccept={currentOrder.isShopAccept} isShopCompleted={currentOrder.isShopCompleted}
                              isDeliverAccept={currentOrder.isDeliverAccept} isDeliverCompleted={props.isDeliverCompleted}/>
             </View>
-
+            <OrderMap userLocation={currentOrder.userLocation} shopLocation={currentOrder.shopLocation}/>
             <View>
                 {
                     currentOrder.items.map(orderedItem => {

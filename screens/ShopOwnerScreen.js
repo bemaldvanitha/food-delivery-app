@@ -1,12 +1,13 @@
 import React from 'react';
-import {View, StyleSheet, Text, Platform,Dimensions,ImageBackground,FlatList} from 'react-native';
+import {View, StyleSheet, Text, Platform,Dimensions,ImageBackground,FlatList,ScrollView,Image} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
-import {FAB,Chip,Button,Avatar,Divider,IconButton} from 'react-native-paper';
+import {FAB,Chip,Button,Avatar,Divider,IconButton,Card} from 'react-native-paper';
 import StarRating from 'react-native-star-rating';
 import {useSelector} from 'react-redux';
 
 import {Colors} from "../constants/Colors";
 import {Categories} from '../Data/dummy-data';
+import CardActions from "react-native-paper/src/components/Card/CardActions";
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -22,6 +23,7 @@ const ShopOwnerScreen = (props) => {
     });
 
     return(
+        <ScrollView>
         <View style={styles.screen}>
             <ImageBackground source={{uri: currentShop.imageUrl}} style={styles.image}>
                 <Text style={styles.name}>{currentShop.name}</Text>
@@ -49,10 +51,29 @@ const ShopOwnerScreen = (props) => {
                         </Chip>
                     )
                 }}/>
+                <IconButton icon='pencil' size={28} color={Colors.primaryColor} onPress={() => {}} animated={true}/>
+            </View>
+            <Divider/>
+            <View>
+                <FlatList data={shopFoods} horizontal={true} renderItem={(data) => {
+                    return(
+                        <Card elevation={5} style={styles.card}>
+                            <Card.Title title={data.item.name} subtitle={data.item.description}/>
+                            <Card.Content>
+                                <Image style={styles.categoryImage} source={{uri: data.item.imageUrl}}/>
+                            </Card.Content>
+                            <CardActions style={styles.cardAction}>
+                                <IconButton icon='delete' size={28} color={Colors.primaryColor} onPress={() => {}} animated={true}/>
+                                <IconButton icon='pencil' size={28} color={Colors.primaryColor} onPress={() => {}} animated={true}/>
+                            </CardActions>
+                        </Card>
+                    )
+                }}/>
             </View>
 
             <FAB style={styles.fab} large icon='settings' onPress={() => {}}/>
         </View>
+        </ScrollView>
     )
 }
 
@@ -83,7 +104,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '100%',
-        height: screenHeight * 0.3,
+        height: screenHeight * 0.25,
         justifyContent: 'flex-end',
         alignItems: 'center'
     },
@@ -139,6 +160,19 @@ const styles = StyleSheet.create({
     },
     offeredFoodText: {
         fontFamily: 'roboto-black-italic'
+    },
+    categoryImage: {
+        width: 100,
+        height: 100
+    },
+    card: {
+        marginHorizontal: screenWidth * 0.02,
+        marginVertical: screenHeight  * 0.008,
+        padding: screenHeight * 0.01,
+    },
+    cardAction: {
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 })
 

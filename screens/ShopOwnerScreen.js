@@ -1,18 +1,20 @@
-import React from 'react';
+import React,{useState} from 'react';
 import {View, StyleSheet, Text, Platform,Dimensions,ImageBackground,FlatList,ScrollView,Image} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
-import {FAB,Chip,Button,Avatar,Divider,IconButton,Card} from 'react-native-paper';
+import {FAB,Chip,Button,Avatar,Divider,IconButton,Card,Provider} from 'react-native-paper';
 import StarRating from 'react-native-star-rating';
 import {useSelector} from 'react-redux';
 
 import {Colors} from "../constants/Colors";
 import {Categories} from '../Data/dummy-data';
 import CardActions from "react-native-paper/src/components/Card/CardActions";
+import ChangeDiscountModal from "../components/ChangeDiscountModal";
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 const ShopOwnerScreen = (props) => {
+    const [isModalShow,setIsModalShow] = useState(false);
     const currentShop = useSelector(state => state.shop.shops).find(shop => shop.id === 's1');
     const shopFoods = useSelector(state => state.food.foods).filter(food => food.shopId === 's1');
 
@@ -30,57 +32,68 @@ const ShopOwnerScreen = (props) => {
         props.navigation.navigate({routeName: 'shopDetail'});
     }
 
+    const toggleModal = () => {
+        setIsModalShow(prevState => !prevState);
+    }
+
     return(
         <ScrollView>
-        <View style={styles.screen}>
-            <ImageBackground source={{uri: currentShop.imageUrl}} style={styles.image}>
-                <Text style={styles.name}>{currentShop.name}</Text>
-            </ImageBackground>
-            <View style={styles.detailContainer}>
-                <Text style={styles.detailText}>{currentShop.detail}</Text>
-            </View>
-            <Divider/>
-            <View style={styles.ratingContainer}>
-                <StarRating disabled={true} rating={currentShop.rating} maxStars={5} fullStarColor='gold' starSize={32}/>
-                <Text>({currentShop.ratedNumber})</Text>
-            </View>
-            <Divider/>
-            <View style={styles.discountContainer}>
-                <Text style={styles.discountText}>{currentShop.offers}</Text>
-                <Button style={styles.discountButton} icon='pencil' mode='contained' color={Colors.primaryColor}>change</Button>
-            </View>
-            <Divider/>
-            <View style={styles.offeredFoodContainer}>
-                <FlatList data={selectedCategories} keyExtractor={(item,index) => item.id} numColumns={2} renderItem={(data) => {
-                    return(
-                        <Chip style={styles.offeredFoodChip} mode='outlined'
-                              avatar={<Avatar.Image source={data.item.imageUrl} size={28}/>}>
-                            <Text style={styles.offeredFoodText}>{data.item.name}</Text>
-                        </Chip>
-                    )
-                }}/>
-                <IconButton icon='pencil' size={28} color={Colors.primaryColor} onPress={() => {}} animated={true}/>
-            </View>
-            <Divider/>
-            <View>
-                <FlatList data={shopFoods} horizontal={true} renderItem={(data) => {
-                    return(
-                        <Card elevation={5} style={styles.card}>
-                            <Card.Title title={data.item.name} subtitle={data.item.description}/>
-                            <Card.Content>
-                                <Image style={styles.categoryImage} source={{uri: data.item.imageUrl}}/>
-                            </Card.Content>
-                            <CardActions style={styles.cardAction}>
-                                <IconButton icon='delete' size={28} color={Colors.primaryColor} onPress={() => {}} animated={true}/>
-                                <IconButton icon='pencil' size={28} color={Colors.primaryColor} onPress={() => editProductHandler(data.item.id)} animated={true}/>
-                            </CardActions>
-                        </Card>
-                    )
-                }}/>
-            </View>
+            <Provider>
+                <View style={styles.screen}>
+                    <ChangeDiscountModal show={isModalShow} onDismiss={toggleModal}/>
+                    <ImageBackground source={{uri: currentShop.imageUrl}} style={styles.image}>
+                        <Text style={styles.name}>{currentShop.name}</Text>
+                    </ImageBackground>
+                    <View style={styles.detailContainer}>
+                        <Text style={styles.detailText}>{currentShop.detail}</Text>
+                    </View>
+                    <Divider/>
+                    <View style={styles.ratingContainer}>
+                        <StarRating disabled={true} rating={currentShop.rating} maxStars={5} fullStarColor='gold' starSize={32}/>
+                        <Text>({currentShop.ratedNumber})</Text>
+                    </View>
+                    <Divider/>
+                    <View style={styles.discountContainer}>
+                        <Text style={styles.discountText}>{currentShop.offers}</Text>
+                        <Button style={styles.discountButton} icon='pencil' mode='contained' color={Colors.primaryColor} onPress={toggleModal}>
+                            change
+                        </Button>
+                    </View>
+                    <Divider/>
 
-            <FAB style={styles.fab} large icon='settings' onPress={addProductHandler}/>
-        </View>
+                    <View style={styles.offeredFoodContainer}>
+                        <FlatList data={selectedCategories} keyExtractor={(item,index) => item.id} numColumns={2} renderItem={(data) => {
+                            return(
+                                <Chip style={styles.offeredFoodChip} mode='outlined'
+                                      avatar={<Avatar.Image source={data.item.imageUrl} size={28}/>}>
+                                    <Text style={styles.offeredFoodText}>{data.item.name}</Text>
+                                </Chip>
+                            )
+                        }}/>
+                        <IconButton icon='pencil' size={28} color={Colors.primaryColor} onPress={() => {}} animated={true}/>
+                    </View>
+
+                    <Divider/>
+                    <View>
+                        <FlatList data={shopFoods} horizontal={true} renderItem={(data) => {
+                            return(
+                                <Card elevation={5} style={styles.card}>
+                                    <Card.Title title={data.item.name} subtitle={data.item.description}/>
+                                    <Card.Content>
+                                        <Image style={styles.categoryImage} source={{uri: data.item.imageUrl}}/>
+                                    </Card.Content>
+                                    <CardActions style={styles.cardAction}>
+                                        <IconButton icon='delete' size={28} color={Colors.primaryColor} onPress={() => {}} animated={true}/>
+                                        <IconButton icon='pencil' size={28} color={Colors.primaryColor} onPress={() => editProductHandler(data.item.id)} animated={true}/>
+                                    </CardActions>
+                                </Card>
+                            )
+                        }}/>
+                    </View>
+
+                    <FAB style={styles.fab} large icon='settings' onPress={addProductHandler}/>
+                </View>
+            </Provider>
         </ScrollView>
     )
 }

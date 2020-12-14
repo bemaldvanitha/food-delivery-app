@@ -26,6 +26,10 @@ const ShopOwnerScreen = (props) => {
         props.navigation.navigate({routeName: 'shopDetail',params: {id: id}});
     }
 
+    const addProductHandler = () => {
+        props.navigation.navigate({routeName: 'shopDetail'});
+    }
+
     return(
         <ScrollView>
         <View style={styles.screen}>
@@ -75,7 +79,7 @@ const ShopOwnerScreen = (props) => {
                 }}/>
             </View>
 
-            <FAB style={styles.fab} large icon='settings' onPress={() => {}}/>
+            <FAB style={styles.fab} large icon='settings' onPress={addProductHandler}/>
         </View>
         </ScrollView>
     )

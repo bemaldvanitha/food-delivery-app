@@ -22,6 +22,10 @@ const ShopOwnerScreen = (props) => {
         selectedCategories.push(category);
     });
 
+    const editProductHandler = (id) => {
+        props.navigation.navigate({routeName: 'shopDetail',params: {id: id}});
+    }
+
     return(
         <ScrollView>
         <View style={styles.screen}>
@@ -64,7 +68,7 @@ const ShopOwnerScreen = (props) => {
                             </Card.Content>
                             <CardActions style={styles.cardAction}>
                                 <IconButton icon='delete' size={28} color={Colors.primaryColor} onPress={() => {}} animated={true}/>
-                                <IconButton icon='pencil' size={28} color={Colors.primaryColor} onPress={() => {}} animated={true}/>
+                                <IconButton icon='pencil' size={28} color={Colors.primaryColor} onPress={() => editProductHandler(data.item.id)} animated={true}/>
                             </CardActions>
                         </Card>
                     )

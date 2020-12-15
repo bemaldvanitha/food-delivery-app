@@ -1,16 +1,19 @@
-import React,{useState} from 'react';
-import {View,StyleSheet,Text,Switch,Image,Dimensions,ScrollView,FlatList,Picker} from 'react-native';
+import React,{useState,useCallback,useEffect} from 'react';
+import {View,StyleSheet,Text,Switch,Image,Dimensions,ScrollView,FlatList,Picker,Alert} from 'react-native';
 import {TextInput} from 'react-native-paper';
-import {useSelector} from 'react-redux';
+import {useSelector,useDispatch} from 'react-redux';
+import {Ionicons} from '@expo/vector-icons';
 
 import {Categories} from '../Data/dummy-data';
 import PickerItem from "react-native-web/dist/exports/Picker/PickerItem";
 import {Colors} from '../constants/Colors';
+import {editFood,addFoods} from '../store/actions/FoodAction';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 const EditProductScreen = (props) => {
+    const dispatch = useDispatch();
     const editProductId = props.navigation.getParam('id');
     const currentProduct = useSelector(state => state.food.foods).find(food => food.id === editProductId);
 
@@ -31,6 +34,50 @@ const EditProductScreen = (props) => {
     const [isImageUrlValid,setIsImageUrlValid] = useState(!!editProductId);
     const [isHalfPortionValid,setIsHalfPortionValid] = useState(!!editProductId);
     const [isFullPortionValid,setIsFullPortionValid] = useState(!!editProductId);
+
+
+    useEffect(() => {
+        props.navigation.setParams({'save': saveHandler})
+    },[dispatch,saveHandler]);
+
+    const saveHandler = useCallback(() => {
+        if(!isNameValid || !isDescriptionValid || !isFullPortionValid || !isImageUrlValid ){
+            return(
+                Alert.alert('enter all fields','all field must enter before submit',[
+                    {title: 'ok'}
+                ])
+            )
+        }else {
+            if(!!editProductId){
+
+                Alert.alert('sure about edit','are you sure about edit',[
+                    {text: 'no'},
+                    {text: 'yes',onPress: () => {
+                            dispatch(
+                                editFood(editProductId,categoryId,name,description,parseFloat(fullPortionPrice),
+                                    halfPotionAvailable ? parseFloat(halfPortionPrice) : 0,imageUrl,isVegan,isVegetarian,isSugarFree)
+                            );
+                            props.navigation.goBack();
+                        }}
+                ]);
+
+            }else{
+                Alert.alert('sure about add','are you sure about add product',[
+                    {text: 'no'},
+                    {text: 'yes',onPress: () => {
+                            dispatch(
+                                addFoods(categoryId,'s1',name,description,parseFloat(fullPortionPrice),
+                                    halfPotionAvailable ? parseFloat(halfPortionPrice) : 0,imageUrl,isVegan,isVegetarian,isSugarFree)
+                            );
+                            props.navigation.goBack();
+                        }}
+                ]);
+            }
+            props.navigation.goBack();
+        }
+
+    },[dispatch,editProductId,categoryId,name,description,fullPortionPrice,halfPortionPrice,halfPotionAvailable,imageUrl,
+        isVegetarian,isVegan,isSugarFree]);
 
     const nameValidator = (text) => {
         if(text.trim().length < 6){
@@ -160,8 +207,18 @@ const EditProductScreen = (props) => {
     )
 }
 
-EditProductScreen.navigationOptions = {
-    headerTitle: 'add/edit product'
+EditProductScreen.navigationOptions = (navData) => {
+    const save = navData.navigation.getParam('save');
+    return{
+        headerTitle: 'add/edit product',
+        headerRight: () => {
+            return(
+                <View style={{marginTop: 15,marginRight: 20}}>
+                    <Ionicons name="ios-save" size={28} color="white" onPress={save}/>
+                </View>
+            )
+        }
+    }
 }
 
 const styles = StyleSheet.create({

@@ -180,7 +180,7 @@ const EditProductScreen = (props) => {
                     {
                         Categories.map(category => {
                             return(
-                                <PickerItem value={category.id} label={category.name}/>
+                                <Picker.Item value={category.id} label={category.name} key={category.id}/>
                             )
                         })
                     }

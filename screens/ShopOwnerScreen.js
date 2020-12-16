@@ -10,6 +10,7 @@ import {Categories} from '../Data/dummy-data';
 import {deleteFood} from '../store/actions/FoodAction'
 import CardActions from "react-native-paper/src/components/Card/CardActions";
 import ChangeDiscountModal from "../components/ChangeDiscountModal";
+import ChangeOfferedCategoryModal from "../components/ChangeOfferedCategoryModal";
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -17,6 +18,7 @@ const screenHeight = Dimensions.get('screen').height;
 const ShopOwnerScreen = (props) => {
     const dispatch = useDispatch();
     const [isModalShow,setIsModalShow] = useState(false);
+    const [isOfferedModalShow,setIsOfferedModalShow] = useState(false);
     const currentShop = useSelector(state => state.shop.shops).find(shop => shop.id === 's1');
     const shopFoods = useSelector(state => state.food.foods).filter(food => food.shopId === 's1');
 
@@ -42,11 +44,17 @@ const ShopOwnerScreen = (props) => {
         setIsModalShow(prevState => !prevState);
     }
 
+    const toggleOfferedModal = () => {
+        setIsOfferedModalShow(prevState => !prevState);
+    }
+
     return(
         <ScrollView>
             <Provider>
                 <View style={styles.screen}>
                     <ChangeDiscountModal show={isModalShow} onDismiss={toggleModal} shopId='s1'/>
+
+                    <ChangeOfferedCategoryModal show={isOfferedModalShow} onDismiss={toggleOfferedModal} shopId='s1'/>
 
                     <ImageBackground source={{uri: currentShop.imageUrl}} style={styles.image}>
                         <Text style={styles.name}>{currentShop.name}</Text>
@@ -80,7 +88,7 @@ const ShopOwnerScreen = (props) => {
                                 </Chip>
                             )
                         }}/>
-                        <IconButton icon='pencil' size={28} color={Colors.primaryColor} onPress={() => {}} animated={true}/>
+                        <IconButton icon='pencil' size={28} color={Colors.primaryColor} onPress={toggleOfferedModal} animated={true}/>
                     </View>
 
                     <Divider/>

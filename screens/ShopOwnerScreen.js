@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import {View, StyleSheet, Text, Platform,Dimensions,ImageBackground,FlatList,ScrollView,Image} from 'react-native';
+import {View, StyleSheet, Text, Platform,Dimensions,ImageBackground,FlatList,ScrollView,Image,TouchableOpacity} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 import {FAB,Chip,Button,Avatar,Divider,IconButton,Card,Provider} from 'react-native-paper';
 import StarRating from 'react-native-star-rating';
@@ -48,6 +48,10 @@ const ShopOwnerScreen = (props) => {
         setIsOfferedModalShow(prevState => !prevState);
     }
 
+    const editShopDetail = () => {
+        props.navigation.navigate({routeName: 'editShop',params: {shopId: 's1'}})
+    }
+
     return(
         <ScrollView>
             <Provider>
@@ -57,7 +61,9 @@ const ShopOwnerScreen = (props) => {
                     <ChangeOfferedCategoryModal show={isOfferedModalShow} onDismiss={toggleOfferedModal} shopId='s1'/>
 
                     <ImageBackground source={{uri: currentShop.imageUrl}} style={styles.image}>
-                        <Text style={styles.name}>{currentShop.name}</Text>
+                        <TouchableOpacity onPress={editShopDetail}>
+                            <Text style={styles.name}>{currentShop.name}</Text>
+                        </TouchableOpacity>
                     </ImageBackground>
 
                     <View style={styles.detailContainer}>

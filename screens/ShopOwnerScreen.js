@@ -3,10 +3,11 @@ import {View, StyleSheet, Text, Platform,Dimensions,ImageBackground,FlatList,Scr
 import {Ionicons} from "@expo/vector-icons";
 import {FAB,Chip,Button,Avatar,Divider,IconButton,Card,Provider} from 'react-native-paper';
 import StarRating from 'react-native-star-rating';
-import {useSelector} from 'react-redux';
+import {useSelector,useDispatch} from 'react-redux';
 
 import {Colors} from "../constants/Colors";
 import {Categories} from '../Data/dummy-data';
+import {deleteFood} from '../store/actions/FoodAction'
 import CardActions from "react-native-paper/src/components/Card/CardActions";
 import ChangeDiscountModal from "../components/ChangeDiscountModal";
 
@@ -14,6 +15,7 @@ const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 const ShopOwnerScreen = (props) => {
+    const dispatch = useDispatch();
     const [isModalShow,setIsModalShow] = useState(false);
     const currentShop = useSelector(state => state.shop.shops).find(shop => shop.id === 's1');
     const shopFoods = useSelector(state => state.food.foods).filter(food => food.shopId === 's1');
@@ -32,6 +34,10 @@ const ShopOwnerScreen = (props) => {
         props.navigation.navigate({routeName: 'shopDetail'});
     }
 
+    const deleteProductHandler = (id) => {
+        dispatch(deleteFood(id));
+    }
+
     const toggleModal = () => {
         setIsModalShow(prevState => !prevState);
     }
@@ -40,19 +46,23 @@ const ShopOwnerScreen = (props) => {
         <ScrollView>
             <Provider>
                 <View style={styles.screen}>
-                    <ChangeDiscountModal show={isModalShow} onDismiss={toggleModal}/>
+                    <ChangeDiscountModal show={isModalShow} onDismiss={toggleModal} shopId='s1'/>
+
                     <ImageBackground source={{uri: currentShop.imageUrl}} style={styles.image}>
                         <Text style={styles.name}>{currentShop.name}</Text>
                     </ImageBackground>
+
                     <View style={styles.detailContainer}>
                         <Text style={styles.detailText}>{currentShop.detail}</Text>
                     </View>
                     <Divider/>
+
                     <View style={styles.ratingContainer}>
                         <StarRating disabled={true} rating={currentShop.rating} maxStars={5} fullStarColor='gold' starSize={32}/>
                         <Text>({currentShop.ratedNumber})</Text>
                     </View>
                     <Divider/>
+
                     <View style={styles.discountContainer}>
                         <Text style={styles.discountText}>{currentShop.offers}</Text>
                         <Button style={styles.discountButton} icon='pencil' mode='contained' color={Colors.primaryColor} onPress={toggleModal}>
@@ -83,8 +93,10 @@ const ShopOwnerScreen = (props) => {
                                         <Image style={styles.categoryImage} source={{uri: data.item.imageUrl}}/>
                                     </Card.Content>
                                     <CardActions style={styles.cardAction}>
-                                        <IconButton icon='delete' size={28} color={Colors.primaryColor} onPress={() => {}} animated={true}/>
-                                        <IconButton icon='pencil' size={28} color={Colors.primaryColor} onPress={() => editProductHandler(data.item.id)} animated={true}/>
+                                        <IconButton icon='delete' size={28} color={Colors.primaryColor}
+                                                    onPress={() => deleteProductHandler(data.item.id)} animated={true}/>
+                                        <IconButton icon='pencil' size={28} color={Colors.primaryColor}
+                                                    onPress={() => editProductHandler(data.item.id)} animated={true}/>
                                     </CardActions>
                                 </Card>
                             )

@@ -137,10 +137,13 @@ ShopOwnerScreen.navigationOptions = (navData) => {
         },
         headerRight: () => {
             return(
-                <View style={{paddingRight: 20,paddingTop: 15}}>
+                <View style={{paddingRight: 20,paddingTop: 15,flexDirection: 'row'}}>
                     <Ionicons name={Platform.OS === 'android' ? 'md-add' : 'ios-add'} size={24} color={Platform.OS === 'android' ? 'white': Colors.primaryColor} onPress={() => {
                         navData.navigation.navigate({routeName: 'shopDetail'})
                     }}/>
+                    <Ionicons name="ios-basket" size={24} style={{marginLeft: 20}} color={Platform.OS === 'android' ? 'white': Colors.primaryColor} onPress={() => {
+                        navData.navigation.navigate({routeName: 'currentOrders'})
+                    }} />
                 </View>
             )
         }

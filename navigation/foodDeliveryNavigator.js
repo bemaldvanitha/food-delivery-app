@@ -27,6 +27,7 @@ import ShopOwnerScreen from "../screens/ShopOwnerScreen";
 import ShopScreen from "../screens/ShopScreen";
 import EditUserScreen from "../screens/EditUserScreen";
 import EditShopScreen from "../screens/EditShopScreen";
+import ShopCurrentOrders from "../screens/ShopCurrentOrders";
 import NavigationHeader from '../components/NavigationHeader';
 import DrawerHeader from "../components/NavigationHeader";
 
@@ -138,6 +139,9 @@ const ShopNavigator = createStackNavigator({
     },
     editShop: {
         screen: EditShopScreen,
+    },
+    currentOrders: {
+        screen: ShopCurrentOrders
     }
 },{
     defaultNavigationOptions: headerCustomStyles,

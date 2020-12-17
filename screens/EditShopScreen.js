@@ -2,6 +2,7 @@ import React,{useState} from 'react';
 import {View,StyleSheet,Text,ScrollView,Image,Dimensions,Platform} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {Ionicons} from '@expo/vector-icons';
+import {useSelector} from 'react-redux';
 
 import {Colors} from '../constants/Colors';
 
@@ -10,31 +11,80 @@ const screenHeight = Dimensions.get('screen').height;
 
 const EditShopScreen = (props) => {
     const currentShopId = props.navigation.getParam('shopId');
+    const currentShop = useSelector(state => state.shop.shops).find(shop => shop.id === currentShopId);
 
-    const [shopName,setShopName] = useState('');
-    const [shopDetail,setShopDetail] = useState('');
-    const [shopLocation,setShopLocation] = useState('');
-    const [shopImageUrl,setShopImageUrl] = useState('https://cdn.pixabay.com/photo/2016/11/29/05/07/baked-goods-1867459_1280.jpg');
+    const [shopName,setShopName] = useState(!!currentShopId ? currentShop.name : '');
+    const [shopDetail,setShopDetail] = useState(!!currentShopId ? currentShop.detail : '');
+    const [shopLocation,setShopLocation] = useState(!!currentShopId ? currentShop.locationInString : '');
+    const [shopImageUrl,setShopImageUrl] = useState(!!currentShopId ? currentShop.imageUrl :
+        'https://cdn.pixabay.com/photo/2016/11/29/05/07/baked-goods-1867459_1280.jpg');
+
+    const [isNameValid,setIsNameValid] = useState(!!currentShopId);
+    const [isDetailValid,setIsDetailValid] = useState(!!currentShopId);
+    const [isLocationValid,setIsLocationValid] = useState(!!currentShopId);
+    const [isImageUrlValid,setIsImageUrlValid] = useState(!!currentShopId);
+
+    const nameValidator = (text) => {
+        if(text.length > 5){
+            setIsNameValid(true);
+        }else{
+            setIsNameValid(false);
+        }
+        setShopName(text);
+    }
+
+    const detailValidator = (text) => {
+        if(text.length > 6){
+            setIsDetailValid(true);
+        }else{
+            setIsDetailValid(false);
+        }
+        setShopDetail(text);
+    }
+
+    const locationNameValidator = (text) => {
+        if(text.length > 5){
+            setIsLocationValid(true);
+        }else{
+            setIsLocationValid(false);
+        }
+        setShopLocation(text);
+    }
+
+    const imageUrlValidator = (text) => {
+        if(text.length > 6 && (text.includes('http') || text.includes('https') )){
+            setIsImageUrlValid(true);
+        }else{
+            setIsImageUrlValid(false);
+        }
+        setShopImageUrl(text);
+    }
 
     return(
         <ScrollView>
             <View>
                 <View style={styles.inputContainer}>
-                    <TextInput label='enter shop name' value={shopName} onChangeText={(text) => setShopName(text)} mode='flat'
+                    <TextInput label='enter shop name' value={shopName} onChangeText={(text) => nameValidator(text)} mode='flat'
                                keyboardType='default'/>
+                    {!isNameValid && <Text style={styles.errorText}>enter valid shop name</Text>}
                 </View>
                 <View style={styles.inputContainer}>
-                    <TextInput label='enter shop detail' value={shopDetail} onChangeText={(text) => setShopDetail(text)} mode='flat'
+                    <TextInput label='enter shop detail' value={shopDetail} onChangeText={(text) => detailValidator(text)} mode='flat'
                                keyboardType='default' multiline={true} numberOfLines={4}/>
+                    {!isDetailValid && <Text style={styles.errorText}>enter valid shop detail</Text>}
                 </View>
                 <View style={styles.inputContainer}>
-                    <TextInput label='enter shop location' value={shopLocation} onChangeText={(text) => setShopLocation(text)} mode='flat'
+                    <TextInput label='enter shop location' value={shopLocation} onChangeText={(text) => locationNameValidator(text)} mode='flat'
                                keyboardType='default' />
+                    {!isLocationValid && <Text style={styles.errorText}>enter valid location</Text>}
                 </View>
                 <View style={styles.imageContainer}>
                     <Image source={{uri: shopImageUrl}} style={styles.image}/>
-                    <TextInput label='enter shop image' value={shopImageUrl} onChangeText={(text) => setShopImageUrl(text)} mode='flat'
-                               keyboardType='default' multiline={true} numberOfLines={4} style={styles.imageUrlInput}/>
+                    <View>
+                        <TextInput label='enter shop image' value={shopImageUrl} onChangeText={(text) => imageUrlValidator(text)} mode='flat'
+                                   keyboardType='default' multiline={true} numberOfLines={4} style={styles.imageUrlInput}/>
+                        {!isImageUrlValid && <Text style={styles.errorText}>enter valid image url</Text>}
+                    </View>
                 </View>
             </View>
         </ScrollView>
@@ -73,6 +123,10 @@ const styles = StyleSheet.create({
     inputContainer: {
         marginVertical: screenHeight * 0.01,
         marginHorizontal: screenWidth * 0.04
+    },
+    errorText: {
+        color: Colors.primaryColor,
+        marginLeft: screenWidth * 0.1
     }
 });
 

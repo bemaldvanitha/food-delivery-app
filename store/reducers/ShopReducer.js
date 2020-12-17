@@ -1,5 +1,6 @@
 import {Shops} from '../../Data/dummy-data';
-import {CHANGE_DISCOUNT,CHANGE_OFFERED_CATEGORIES} from '../actions/ShopAction';
+import {CHANGE_DISCOUNT,CHANGE_OFFERED_CATEGORIES,EDIT_SHOP} from '../actions/ShopAction';
+import Shop from '../../models/Shop';
 
 const initState = {
     shops: Shops
@@ -26,6 +27,20 @@ const ShopReducer = (state = initState,action) => {
             changeShopList.splice(changeCategoryShopIndex,1);
 
             return {...state,shops: changeShopList.concat(changeCategoryShop)}
+
+        case EDIT_SHOP:
+            const editShopIndex = state.shops.findIndex(shop => shop.id === action.payload.shopId);
+            const editShop = state.shops.find(shop => shop.id === action.payload.shopId);
+
+            editShop.name = action.payload.name;
+            editShop.detail = action.payload.detail;
+            editShop.locationName = action.payload.locationName;
+            editShop.imageUrl = action.payload.imageUrl;
+
+            const updatedShopList = [...state.shops];
+            updatedShopList.splice(editShopIndex,1);
+
+            return {...state,shops: updatedShopList.concat(editShop)}
 
         default: return state;
     }

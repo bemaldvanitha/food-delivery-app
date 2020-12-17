@@ -1,15 +1,17 @@
-import React,{useState} from 'react';
-import {View,StyleSheet,Text,ScrollView,Image,Dimensions,Platform} from 'react-native';
+import React,{useState,useEffect,useCallback} from 'react';
+import {View,StyleSheet,Text,ScrollView,Image,Dimensions,Platform,Alert} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {Ionicons} from '@expo/vector-icons';
-import {useSelector} from 'react-redux';
+import {useSelector,useDispatch} from 'react-redux';
 
 import {Colors} from '../constants/Colors';
+import {editShop} from '../store/actions/ShopAction';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 const EditShopScreen = (props) => {
+    const dispatch = useDispatch();
     const currentShopId = props.navigation.getParam('shopId');
     const currentShop = useSelector(state => state.shop.shops).find(shop => shop.id === currentShopId);
 
@@ -24,40 +26,68 @@ const EditShopScreen = (props) => {
     const [isLocationValid,setIsLocationValid] = useState(!!currentShopId);
     const [isImageUrlValid,setIsImageUrlValid] = useState(!!currentShopId);
 
+    useEffect(() => {
+        props.navigation.setParams({'save': handleSubmit});
+    },[dispatch,handleSubmit,shopDetail,shopName,shopLocation,shopImageUrl]);
+
+    const handleSubmit = useCallback( () => {
+        if(isNameValid && isDetailValid && isLocationValid && isImageUrlValid){
+            if(!!currentShopId){
+                Alert.alert('are you sure','sure about editing',[
+                    {text: 'no'},
+                    {text: 'yes',onPress: () => {
+                            dispatch(editShop(currentShopId,shopName,shopDetail,shopLocation,shopImageUrl));
+                            props.navigation.goBack();
+                        }}
+                ])
+            }else{
+
+            }
+        }else{
+            Alert.alert('enter all fields','all fields must required',[
+                {text: 'ok'}
+            ]);
+        }
+    },[shopName,shopDetail,shopImageUrl,shopLocation,dispatch]);
+
     const nameValidator = (text) => {
+        setShopName(text);
+
         if(text.length > 5){
             setIsNameValid(true);
         }else{
             setIsNameValid(false);
         }
-        setShopName(text);
     }
 
     const detailValidator = (text) => {
+        setShopDetail(text);
+
         if(text.length > 6){
             setIsDetailValid(true);
         }else{
             setIsDetailValid(false);
         }
-        setShopDetail(text);
     }
 
     const locationNameValidator = (text) => {
+        setShopLocation(text);
+
         if(text.length > 5){
             setIsLocationValid(true);
         }else{
             setIsLocationValid(false);
         }
-        setShopLocation(text);
     }
 
     const imageUrlValidator = (text) => {
+        setShopImageUrl(text);
+
         if(text.length > 6 && (text.includes('http') || text.includes('https') )){
             setIsImageUrlValid(true);
         }else{
             setIsImageUrlValid(false);
         }
-        setShopImageUrl(text);
     }
 
     return(
@@ -91,16 +121,18 @@ const EditShopScreen = (props) => {
     )
 }
 
-EditShopScreen.navigationOptions = {
-    headerTitle: 'edit shop',
-    headerRight: () => {
-        return(
-            <View style={{marginTop: 15,marginRight: 20}}>
-                <Ionicons name="ios-save" size={28} color={Platform.OS === 'android' ? 'white' : Colors.primaryColor } onPress={() => {
-
-                }}/>
-            </View>
-        )
+EditShopScreen.navigationOptions = navData => {
+    const save = navData.navigation.getParam('save');
+    return{
+        headerTitle: 'edit shop',
+        headerRight: () => {
+            return(
+                <View style={{marginTop: 15,marginRight: 20}}>
+                    <Ionicons name="ios-save" size={28} color={Platform.OS === 'android' ? 'white' : Colors.primaryColor }
+                              onPress={save}/>
+                </View>
+            )
+        }
     }
 }
 

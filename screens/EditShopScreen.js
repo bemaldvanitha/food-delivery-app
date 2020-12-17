@@ -5,7 +5,8 @@ import {Ionicons} from '@expo/vector-icons';
 import {useSelector,useDispatch} from 'react-redux';
 
 import {Colors} from '../constants/Colors';
-import {editShop} from '../store/actions/ShopAction';
+import {editShop,addShop} from '../store/actions/ShopAction';
+import Location from "../models/Location";
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -41,7 +42,13 @@ const EditShopScreen = (props) => {
                         }}
                 ])
             }else{
-
+                Alert.alert('are you sure','sure about adding shop',[
+                    {text: 'no'},
+                    {text: 'yes',onPress: () => {
+                            dispatch(addShop(shopName,shopDetail,shopLocation,shopImageUrl,new Location(5.95401,80.554856)));
+                            props.navigation.navigate({routeName: 'shop'})
+                        }}
+                ])
             }
         }else{
             Alert.alert('enter all fields','all fields must required',[
@@ -124,7 +131,7 @@ const EditShopScreen = (props) => {
 EditShopScreen.navigationOptions = navData => {
     const save = navData.navigation.getParam('save');
     return{
-        headerTitle: 'edit shop',
+        headerTitle: 'edit/add shop',
         headerRight: () => {
             return(
                 <View style={{marginTop: 15,marginRight: 20}}>

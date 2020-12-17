@@ -1,5 +1,5 @@
 import {Shops} from '../../Data/dummy-data';
-import {CHANGE_DISCOUNT,CHANGE_OFFERED_CATEGORIES,EDIT_SHOP} from '../actions/ShopAction';
+import {CHANGE_DISCOUNT,CHANGE_OFFERED_CATEGORIES,EDIT_SHOP,ADD_SHOP} from '../actions/ShopAction';
 import Shop from '../../models/Shop';
 
 const initState = {
@@ -42,6 +42,10 @@ const ShopReducer = (state = initState,action) => {
 
             return {...state,shops: updatedShopList.concat(editShop)}
 
+        case ADD_SHOP:
+            const newShop = new Shop(Math.random().toString(),action.payload.name,0,0,action.payload.imageUrl,
+                action.payload.detail,'',action.payload.locationName,action.payload.locationInLatLng,[]);
+            return {...state,shops: state.shops.concat(newShop)}
         default: return state;
     }
 }

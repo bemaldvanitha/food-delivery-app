@@ -1,10 +1,24 @@
 import React from 'react';
-import {View,StyleSheet,Text} from 'react-native';
+import {View,StyleSheet,Text,Dimensions,FlatList} from 'react-native';
+import {useSelector} from 'react-redux';
+
+import ShopOrderedItem from "../components/ShopOrderedItem";
+
+const screenWidth = Dimensions.get('screen').width;
+const screenHeight = Dimensions.get('screen').height;
 
 const ShopCurrentOrders = (props) => {
+    const shopOrders = useSelector(state => state.order.orders).filter((order => order.shopId === 's1'));
     return(
         <View>
-            <Text>current orders</Text>
+            <FlatList data={shopOrders} keyExtractor={(item,index) => item.id} renderItem={(data) => {
+                return(
+                    <ShopOrderedItem id={data.item.id} orderName={data.item.userName} date={data.item.date}
+                                     isShopAccept={data.item.isShopAccept} isShopCompleted={data.item.isShopCompleted}
+                                     items={data.item.items} notes={data.item.notes} shopName={data.item.shopName}
+                                     totalAmount={data.item.totalAmount}/>
+                )
+            }}/>
         </View>
     )
 }

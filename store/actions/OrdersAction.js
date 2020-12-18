@@ -21,8 +21,20 @@ export const addOrders = (items,note,totalAmount,userId,userName,userLocation,sh
     }
 }
 
-export const shopAccepted = () => {
+export const shopAccepted = (orderId) => {
     return{
-        type: SHOP_ACCEPTED
+        type: SHOP_ACCEPTED,
+        payload: {
+            orderId: orderId
+        }
+    }
+}
+
+export const shopCompleted = (orderId) => {
+    return{
+        type: SHOP_COMPLETED,
+        payload: {
+            orderId: orderId
+        }
     }
 }

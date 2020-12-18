@@ -1,12 +1,24 @@
 import React from 'react';
-import {View,Text,StyleSheet,Image,Dimensions} from 'react-native';
+import {View,Text,StyleSheet,Image,Dimensions,TouchableOpacity} from 'react-native';
+import {useDispatch} from 'react-redux';
 
 import OrderedFoodItem from "./OrderedFoodItem";
+import {shopAccepted,shopCompleted} from '../store/actions/OrdersAction';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 const ShopOrderedItem = (props) => {
+    const dispatch = useDispatch();
+
+    const acceptOrder = () => {
+        dispatch(shopAccepted(props.id));
+    }
+
+    const finishOrder = () => {
+        dispatch(shopCompleted(props.id));
+    }
+
     return(
         <View style={styles.box}>
             <View style={styles.mainDetailContainer}>
@@ -33,12 +45,12 @@ const ShopOrderedItem = (props) => {
             </View>
 
             <View style={styles.buttonContainer}>
-                <View>
+                <TouchableOpacity style={ !props.isShopAccept ? styles.buttonBlur : styles.buttonNormal } onPress={acceptOrder}>
                     <Image source={require('../assets/images/order/cooking.png')} style={styles.image}/>
-                </View>
-                <View>
+                </TouchableOpacity>
+                <TouchableOpacity style={ !props.isShopCompleted ? styles.buttonBlur : styles.buttonNormal } onPress={finishOrder}>
                     <Image source={require('../assets/images/order/cookCompleted.png')} style={styles.image}/>
-                </View>
+                </TouchableOpacity>
             </View>
 
         </View>
@@ -77,7 +89,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: screenWidth * 0.25,
-        height: screenHeight * 0.11
+        height: screenHeight * 0.11,
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -91,7 +103,6 @@ const styles = StyleSheet.create({
     },
     notes: {
         fontFamily: 'san-swashed',
-        //width: screenWidth * 0.7,
         fontSize: 16
     },
     orderedName: {
@@ -101,6 +112,12 @@ const styles = StyleSheet.create({
     label: {
         width: screenWidth * 0.3,
         fontFamily: 'cha-lanka'
+    },
+    buttonBlur: {
+        opacity: 0.2,
+    },
+    buttonNormal: {
+
     }
 });
 

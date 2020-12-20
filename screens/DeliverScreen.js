@@ -1,12 +1,27 @@
 import React from 'react';
-import {View, StyleSheet, Text, Platform} from 'react-native';
+import {View, StyleSheet, Text, Platform,FlatList} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
+import {useSelector} from 'react-redux';
+
 import {Colors} from "../constants/Colors";
+import DeliveryItem from "../components/DeliveryItem";
 
 const DeliverScreen = (props) => {
+    const currentNonDeliveredOrders = useSelector(state => state.order.orders).filter((order) => {
+        if(order.isDeliverAccept === false && order.isShopAccept){
+         return true;
+        }
+    });
+
     return(
         <View style={styles.screen}>
-            <Text>Deliver Screen</Text>
+            <FlatList data={currentNonDeliveredOrders} keyExtractor={(item,index) => item.id} renderItem={(data) => {
+                return(
+                    <DeliveryItem id={data.item.id} userName={data.item.userName} shopName={data.item.shopName}
+                                  totalAmount={data.item.totalAmount} date={data.item.date} isShopCompleted={data.item.isShopCompleted}
+                        />
+                )
+            }}/>
         </View>
     )
 }
@@ -27,9 +42,7 @@ DeliverScreen.navigationOptions = navData => {
 
 const styles = StyleSheet.create({
     screen: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
+
     }
 })
 

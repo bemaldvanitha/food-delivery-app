@@ -19,7 +19,9 @@ const DeliverScreen = (props) => {
                 return(
                     <DeliveryItem id={data.item.id} userName={data.item.userName} shopName={data.item.shopName}
                                   totalAmount={data.item.totalAmount} date={data.item.date} isShopCompleted={data.item.isShopCompleted}
-                        />
+                        onSelect={() => {
+                            props.navigation.navigate({routeName: 'deliverDetail',params: {orderId: data.item.id}})
+                        }}/>
                 )
             }}/>
         </View>

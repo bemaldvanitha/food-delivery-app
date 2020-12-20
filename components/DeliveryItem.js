@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, StyleSheet,View,ImageBackground,Dimensions} from 'react-native';
+import {Text, StyleSheet,View,ImageBackground,Dimensions,TouchableNativeFeedback} from 'react-native';
 
 import {Colors} from '../constants/Colors';
 
@@ -8,8 +8,9 @@ const screenHeight = Dimensions.get('screen').height;
 
 const DeliveryItem = (props) => {
     return(
-        <View style={styles.card}>
-            <ImageBackground source={require('../assets/images/order/order-background.png')} style={styles.image}>
+        <TouchableNativeFeedback onPress={props.onSelect}>
+            <View style={styles.card}>
+                <ImageBackground source={require('../assets/images/order/order-background.png')} style={styles.image}>
 
                     <View>
                         <Text style={styles.cardTitle}>{props.shopName}</Text>
@@ -27,8 +28,9 @@ const DeliveryItem = (props) => {
                             {props.isShopCompleted ? 'finished' : 'cooking'}
                         </Text>
                     </View>
-            </ImageBackground>
-        </View>
+                </ImageBackground>
+            </View>
+        </TouchableNativeFeedback>
     )
 }
 
@@ -40,10 +42,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: screenWidth * 0.05,
         backgroundColor: 'black',
         opacity: 0.7,
+        overflow: 'hidden',
     },
     card: {
         paddingHorizontal: screenWidth * 0.03,
         marginHorizontal: screenWidth * 0.12,
+        borderRadius: 20,
+        overflow: 'hidden'
     },
     cardTitle: {
         fontFamily: 'roboto-bold',

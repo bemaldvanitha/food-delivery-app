@@ -38,3 +38,22 @@ export const shopCompleted = (orderId) => {
         }
     }
 }
+
+
+export const deliveryAccept = (orderId) => {
+    return{
+        type: DELIVER_ACCEPTED,
+        payload: {
+            orderId: orderId
+        }
+    }
+}
+
+export const deliveryFinish = (orderId) => {
+    return{
+        type: DELIVER_COMPLETED,
+        payload: {
+            orderId: orderId
+        }
+    }
+}

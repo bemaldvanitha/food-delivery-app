@@ -1,4 +1,4 @@
-import {ADD_ORDERS,SHOP_COMPLETED,SHOP_ACCEPTED} from '../actions/OrdersAction';
+import {ADD_ORDERS,SHOP_COMPLETED,SHOP_ACCEPTED,DELIVER_COMPLETED,DELIVER_ACCEPTED} from '../actions/OrdersAction';
 import Orders from '../../models/Orders';
 
 const initState = {
@@ -32,6 +32,26 @@ const OrderReducer = (state = initState,action) => {
             updateOrders.splice(finishedOrderId,1);
 
             return {...state,orders: updateOrders.concat(finishedOrder)}
+
+        case DELIVER_ACCEPTED:
+            const acceptedOrderDeliveryId = state.orders.findIndex(order => order.id === action.payload.orderId);
+            const acceptedOrderDelivery = state.orders.find(order => order.id === action.payload.orderId);
+
+            acceptedOrderDelivery.isDeliverAccept = true;
+            const updatedDeliveryOrder = [...state.orders];
+            updatedDeliveryOrder.splice(acceptedOrderDeliveryId,1);
+
+            return {...state,orders: updatedDeliveryOrder.concat(acceptedOrderDelivery)}
+
+        case DELIVER_COMPLETED:
+            const finishedDeliveryOrderId = state.orders.findIndex(order => order.id === action.payload.orderId);
+            const finishedDeliveryOrder = state.orders.find(order => order.id === action.payload.orderId);
+
+            finishedDeliveryOrder.isDeliverCompleted = true;
+            const updateDeliveryOrder = [...state.orders];
+            updateDeliveryOrder.splice(finishedDeliveryOrderId,1);
+
+            return {...state,orders: updateDeliveryOrder.concat(finishedDeliveryOrder)}
 
         default: return state;
     }

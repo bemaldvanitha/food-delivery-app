@@ -8,13 +8,48 @@ export const TOGGLE_FAVORITE_FOODS = 'TOGGLE_FAVORITE_FOODS';
 export const EDIT_USER = 'EDIT_USER';
 export const FETCH_USERS = 'FETCH_USERS';
 
-export const toggleFavoriteShops = (userId,shopId) => {
-    return{
-        type: TOGGLE_FAVORITE_SHOPS,
-        payload: {
-            userId: userId,
-            shopId: shopId,
+export const toggleFavoriteShops = (userId,shopId,allFav,isFav) => {
+    return async (dispatch) => {
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/user/${userId}.json`;
+
+        if(isFav){
+            const removedFav = allFav.filter(id => id !== shopId);
+            console.log(removedFav);
+
+            const response = await axios.patch(url,{
+                'favoriteShopIds': removedFav
+            });
+
+        }else {
+
+            const response = await axios.patch(url,{
+                'favoriteShopIds': [...allFav,shopId]
+            });
+
         }
+
+        dispatch({
+            type: TOGGLE_FAVORITE_SHOPS,
+            payload: {
+                userId: userId,
+                shopId: shopId,
+            }
+        });
+    }
+}
+
+export const toggleFavoriteFoods = (userId,foodId) => {
+    return async (dispatch) => {
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/user/${userId}.json`;
+
+        dispatch({
+            type: TOGGLE_FAVORITE_FOODS,
+            payload: {
+                userId: userId,
+                foodId: foodId
+            }
+        });
+
     }
 }
 
@@ -44,16 +79,6 @@ export const fetchUsers = () => {
 
         }catch (err){
             throw err;
-        }
-    }
-}
-
-export const toggleFavoriteFoods = (userId,foodId) => {
-    return{
-        type: TOGGLE_FAVORITE_FOODS,
-        payload: {
-            userId: userId,
-            foodId: foodId
         }
     }
 }

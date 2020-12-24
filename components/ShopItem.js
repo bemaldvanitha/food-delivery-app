@@ -8,7 +8,8 @@ import {Colors} from '../constants/Colors';
 import {toggleFavoriteShops} from '../store/actions/UsersAction';
 
 const ShopItem = (props) => {
-    const isFav = useSelector(state => state.user.users).find(user => user.id === 'u1').favoriteShopIds.findIndex(fav => fav === props.id);
+    const allFav = useSelector(state => state.user.users).find(user => user.id === 'u1').favoriteShopIds;
+    const isFav = allFav.findIndex(fav => fav === props.id);
     const dispatch = useDispatch();
     const offeredCategoryNames = [];
 
@@ -17,7 +18,7 @@ const ShopItem = (props) => {
     })
 
     const toggleFavorite = () => {
-        dispatch(toggleFavoriteShops('u1',props.id));
+        dispatch(toggleFavoriteShops('u1',props.id,allFav,isFav !== -1));
     }
 
     return(

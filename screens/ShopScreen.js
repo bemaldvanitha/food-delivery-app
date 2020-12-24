@@ -12,7 +12,9 @@ const screenHeight = Dimensions.get('screen').height;
 
 const ShopScreen = (props) => {
     const dispatch = useDispatch();
-    const isFav = useSelector(state => state.user.users).find(user => user.id === 'u1').favoriteShopIds.findIndex(fav => fav === props.id);
+    const allFav = useSelector(state => state.user.users).find(user => user.id === 'u1').favoriteShopIds;
+    const isFav = allFav.findIndex(fav => fav === props.id);
+
     const shopId = props.navigation.getParam('id');
     const selShop = useSelector(state => state.shop.shops).find(shop => shop.id === shopId);
     const shopFoods = useSelector(state => state.food.foods).filter(food => food.shopId === shopId);
@@ -27,7 +29,7 @@ const ShopScreen = (props) => {
     },[selShop]);
 
     const toggleFavorite = () => {
-        dispatch(toggleFavoriteShops('u1',props.id));
+        dispatch(toggleFavoriteShops('u1',props.id,allFav,isFav !== -1));
     }
 
     return(

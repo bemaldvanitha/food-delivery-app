@@ -17,8 +17,10 @@ const FoodItemScreen = (props) => {
     const [selectedSize,setSelectedSize] = useState('full');
     const [price,setPrice] = useState(selFood.fullPortionPrice);
     const [quantity,setQuantity] = useState(1);
+
     const dispatch = useDispatch();
-    const isFav = useSelector(state => state.user.users).find(user => user.id === 'u1').favoriteFoodIds.findIndex(fav => fav === foodId);
+    const allFav = useSelector(state => state.user.users).find(user => user.id === 'u1').favoriteFoodIds;
+    const isFav = allFav.findIndex(fav => fav === foodId);
 
     useEffect(() => {
         props.navigation.setParams({name: selFood.name});
@@ -37,7 +39,7 @@ const FoodItemScreen = (props) => {
     }
 
     const toggleFavoriteFood = () => {
-        dispatch(toggleFavoriteFoods('u1',foodId));
+        dispatch(toggleFavoriteFoods('u1',foodId,allFav,isFav !== -1));
     }
 
     return(

@@ -14,7 +14,6 @@ export const toggleFavoriteShops = (userId,shopId,allFav,isFav) => {
 
         if(isFav){
             const removedFav = allFav.filter(id => id !== shopId);
-            console.log(removedFav);
 
             const response = await axios.patch(url,{
                 'favoriteShopIds': removedFav
@@ -35,21 +34,40 @@ export const toggleFavoriteShops = (userId,shopId,allFav,isFav) => {
                 shopId: shopId,
             }
         });
+
     }
 }
 
-export const toggleFavoriteFoods = (userId,foodId) => {
+export const toggleFavoriteFoods = (userId,foodId,allFav,isFav) => {
     return async (dispatch) => {
         const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/user/${userId}.json`;
 
-        dispatch({
-            type: TOGGLE_FAVORITE_FOODS,
-            payload: {
-                userId: userId,
-                foodId: foodId
-            }
-        });
+        try {
+            if(isFav){
+                const removedFav = allFav.filter(id => id !== foodId);
 
+                const response = await axios.patch(url,{
+                    'favoriteFoodIds': removedFav
+                });
+
+            }else{
+                const response = await axios.patch(url,{
+                    'favoriteFoodIds': [...allFav,foodId]
+                });
+
+            }
+
+            dispatch({
+                type: TOGGLE_FAVORITE_FOODS,
+                payload: {
+                    userId: userId,
+                    foodId: foodId
+                }
+            });
+
+        }catch (err){
+            throw err;
+        }
     }
 }
 
@@ -64,8 +82,10 @@ export const fetchUsers = () => {
 
             for (const key in resData){
                 const user = new User(key,resData[key]['firstName'],resData[key]['lastName'],resData[key]['address'],resData[key]['telNumber'],
-                    resData[key]['email'],resData[key]['imageUrl'],resData[key]['location'],
-                    new Location(0,0),[],[],resData[key]['isDeliveryMan'],resData[key]['isShopOwner']);
+                    resData[key]['email'],resData[key]['imageUrl'],resData[key]['location'], new Location(0,0),
+                    resData[key]['favoriteFoodIds'] !== null ?  resData[key]['favoriteFoodIds'] : []
+                    ,resData[key]['favoriteShopIds'] !== null ? resData[key]['favoriteShopIds'] : []
+                    ,resData[key]['isDeliveryMan'],resData[key]['isShopOwner']);
 
                 allUsers.push(user);
             }

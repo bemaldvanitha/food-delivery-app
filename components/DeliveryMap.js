@@ -34,4 +34,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default DeliveryMap;s
+export default DeliveryMap;

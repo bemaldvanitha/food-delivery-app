@@ -52,7 +52,7 @@ const UsersReducer = (state = initState,action) => {
 
             const updatedList = [...state.users];
             updatedList.splice(editUserIndex,1);
-            return {...state,users: updatedList.push(updatedUser)}
+            return {...state,users: updatedList.concat(updatedUser)}
 
         default: return state;
     }

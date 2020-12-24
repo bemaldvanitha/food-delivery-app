@@ -1,13 +1,20 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import {View,StyleSheet,Text,Platform,FlatList} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
-import {useSelector} from 'react-redux';
+import {useSelector,useDispatch} from 'react-redux';
 
 import {Colors} from '../constants/Colors';
 import ShopItem from "../components/ShopItem";
+import {fetchUsers} from '../store/actions/UsersAction';
 
 const HomeScreen = (props) => {
     const shops = useSelector(state => state.shop.shops);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchUsers());
+    },[dispatch])
+
     return(
         <View style={styles.screen}>
             <FlatList data={shops} keyExtractor={(item,index) => item.id} renderItem={(data) => {

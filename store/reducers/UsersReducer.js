@@ -1,6 +1,6 @@
 import {Users} from '../../Data/dummy-data';
 import User from '../../models/User';
-import {TOGGLE_FAVORITE_FOODS,TOGGLE_FAVORITE_SHOPS,EDIT_USER} from '../actions/UsersAction'
+import {TOGGLE_FAVORITE_FOODS,TOGGLE_FAVORITE_SHOPS,EDIT_USER,FETCH_USERS} from '../actions/UsersAction'
 
 const initState = {
     users: Users
@@ -25,6 +25,7 @@ const UsersReducer = (state = initState,action) => {
                 users.splice(userIndex,1);
                 return {...state,users: users.concat(user)}
             }
+
         case TOGGLE_FAVORITE_FOODS:
 
             const favoIndex = state.users.find(user => user.id === action.payload.userId).favoriteFoodIds.findIndex(favId => favId === action.payload.foodId);
@@ -42,6 +43,7 @@ const UsersReducer = (state = initState,action) => {
                 users.splice(curUserIndex,1);
                 return {...state,users: users.concat(curUser)}
             }
+
         case EDIT_USER:
             const editUserIndex = state.users.findIndex(user => user.id === action.payload.userId);
             const editUser = state.users.find(user => user.id === action.payload.userId);
@@ -53,6 +55,9 @@ const UsersReducer = (state = initState,action) => {
             const updatedList = [...state.users];
             updatedList.splice(editUserIndex,1);
             return {...state,users: updatedList.concat(updatedUser)}
+
+        case FETCH_USERS:
+            return {...state,users: action.payload.users}
 
         default: return state;
     }

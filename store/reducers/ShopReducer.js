@@ -43,7 +43,7 @@ const ShopReducer = (state = initState,action) => {
             return {...state,shops: updatedShopList.concat(editShop)}
 
         case ADD_SHOP:
-            const newShop = new Shop(Math.random().toString(),action.payload.name,0,0,action.payload.imageUrl,
+            const newShop = new Shop(action.payload.id,action.payload.uId,action.payload.name,0,0,action.payload.imageUrl,
                 action.payload.detail,'',action.payload.locationName,action.payload.locationInLatLng,[]);
             return {...state,shops: state.shops.concat(newShop)}
         default: return state;

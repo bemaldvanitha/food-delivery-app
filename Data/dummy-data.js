@@ -36,6 +36,7 @@ export const Categories = [
 export const Shops = [
     new Shop(
         's1',
+        'u1',
         'Pizza hut',
         4.7,
         50,
@@ -48,6 +49,7 @@ export const Shops = [
     ),
     new Shop(
         's2',
+        'u1',
         'Mac donald',
         4.4,
         62,
@@ -60,6 +62,7 @@ export const Shops = [
     ),
     new Shop(
         's3',
+        'u1',
         'Kfc',
         4.2,
         38,
@@ -72,6 +75,7 @@ export const Shops = [
     ),
     new Shop(
         's4',
+        'u1',
         'Subway',
         4.4,
         62,
@@ -84,6 +88,7 @@ export const Shops = [
     ),
     new Shop(
         's5',
+        'u1',
         'Cafe zupass',
         4.9,
         81,
@@ -96,6 +101,7 @@ export const Shops = [
     ),
     new Shop(
         's6',
+        'u1',
         'Mini China',
         4.8,
         59,
@@ -108,6 +114,7 @@ export const Shops = [
     ),
     new Shop(
         's7',
+        'u2',
         'indian hut',
         4.7,
         51,
@@ -120,6 +127,7 @@ export const Shops = [
     ),
     new Shop(
         's8',
+        'u2',
         'Jekyll and Hyde Club',
         4.1,
         70,
@@ -132,6 +140,7 @@ export const Shops = [
     ),
     new Shop(
         's9',
+        'u2',
         'Sola Pasta Bar',
         4.4,
         13,
@@ -144,6 +153,7 @@ export const Shops = [
     ),
     new Shop(
         's10',
+        'u2',
         'Sweet green',
         4.9,
         62,

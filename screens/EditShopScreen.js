@@ -45,7 +45,8 @@ const EditShopScreen = (props) => {
                 Alert.alert('are you sure','sure about adding shop',[
                     {text: 'no'},
                     {text: 'yes',onPress: () => {
-                            dispatch(addShop(shopName,shopDetail,shopLocation,shopImageUrl,new Location(5.95401,80.554856)));
+                            dispatch(addShop('u1',shopName,shopDetail,shopLocation,shopImageUrl,
+                                new Location(5.95401,80.554856)));
                             props.navigation.navigate({routeName: 'shop'})
                         }}
                 ])

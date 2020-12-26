@@ -41,11 +41,23 @@ export const fetchShops = () => {
 }
 
 export const changeDiscount = (shopId,discount) => {
-    return{
-        type: CHANGE_DISCOUNT,
-        payload: {
-            shopId: shopId,
-            discount: discount
+    return async (dispatch) => {
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/shops/${shopId}.json`;
+        try{
+            const response = await axios.patch(url,{
+                'offers': discount
+            });
+
+            dispatch({
+                type: CHANGE_DISCOUNT,
+                payload: {
+                    shopId: shopId,
+                    discount: discount
+                }
+            });
+
+        }catch (err){
+            throw err;
         }
     }
 }

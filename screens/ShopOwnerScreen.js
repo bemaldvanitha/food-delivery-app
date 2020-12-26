@@ -56,7 +56,7 @@ const ShopOwnerScreen = (props) => {
         <ScrollView>
             <Provider>
                 <View style={styles.screen}>
-                    <ChangeDiscountModal show={isModalShow} onDismiss={toggleModal} shopId='s1'/>
+                    <ChangeDiscountModal show={isModalShow} onDismiss={toggleModal} shopId={currentShop.id}/>
 
                     <ChangeOfferedCategoryModal show={isOfferedModalShow} onDismiss={toggleOfferedModal} shopId='s1'/>
 

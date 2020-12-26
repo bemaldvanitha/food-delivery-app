@@ -3,7 +3,7 @@ import {CHANGE_DISCOUNT,CHANGE_OFFERED_CATEGORIES,EDIT_SHOP,ADD_SHOP,FETCH_SHOPS
 import Shop from '../../models/Shop';
 
 const initState = {
-    shops: Shops
+    shops: []
 }
 
 const ShopReducer = (state = initState,action) => {
@@ -12,7 +12,7 @@ const ShopReducer = (state = initState,action) => {
             const changeOfferShopIndex = state.shops.findIndex(shop => shop.id === action.payload.shopId);
             const changeOfferShop = state.shops.find(shop => shop.id === action.payload.shopId);
 
-            changeOfferShop.offers = action.payload.discount;
+            changeOfferShop.offers = action.payload.discount.toString();
             const changeShops = [...state.shops];
             changeShops.splice(changeOfferShopIndex,1);
 

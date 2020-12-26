@@ -19,8 +19,8 @@ const ShopOwnerScreen = (props) => {
     const dispatch = useDispatch();
     const [isModalShow,setIsModalShow] = useState(false);
     const [isOfferedModalShow,setIsOfferedModalShow] = useState(false);
-    const currentShop = useSelector(state => state.shop.shops).find(shop => shop.id === 's1');
-    const shopFoods = useSelector(state => state.food.foods).filter(food => food.shopId === 's1');
+    const currentShop = useSelector(state => state.shop.shops).find(shop => shop.id === '-MPS5s6g6Ptrqwd7V1cA');
+    const shopFoods = useSelector(state => state.food.foods).filter(food => food.shopId === '-MPS5s6g6Ptrqwd7V1cA');
 
     const selectedCategories  = [];
     currentShop.offeredCategoryIds.map(id => {

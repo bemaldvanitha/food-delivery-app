@@ -6,6 +6,7 @@ import {useSelector,useDispatch} from 'react-redux';
 import {Colors} from '../constants/Colors';
 import ShopItem from "../components/ShopItem";
 import {fetchUsers} from '../store/actions/UsersAction';
+import {fetchShops} from '../store/actions/ShopAction';
 
 const HomeScreen = (props) => {
     const shops = useSelector(state => state.shop.shops);
@@ -13,6 +14,7 @@ const HomeScreen = (props) => {
 
     useEffect(() => {
         dispatch(fetchUsers());
+        dispatch(fetchShops());
     },[dispatch])
 
     return(

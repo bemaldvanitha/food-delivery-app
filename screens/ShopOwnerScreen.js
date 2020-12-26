@@ -58,7 +58,8 @@ const ShopOwnerScreen = (props) => {
                 <View style={styles.screen}>
                     <ChangeDiscountModal show={isModalShow} onDismiss={toggleModal} shopId={currentShop.id}/>
 
-                    <ChangeOfferedCategoryModal show={isOfferedModalShow} onDismiss={toggleOfferedModal} shopId='s1'/>
+                    <ChangeOfferedCategoryModal show={isOfferedModalShow} onDismiss={toggleOfferedModal} shopId={currentShop.id}
+                                                allOfferedCateGories={currentShop.offeredCategoryIds}/>
 
                     <ImageBackground source={{uri: currentShop.imageUrl}} style={styles.image}>
                         <TouchableOpacity onPress={editShopDetail}>

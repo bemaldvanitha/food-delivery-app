@@ -15,7 +15,7 @@ const ChangeOfferedCategoryModal = (props) => {
     const dispatch = useDispatch();
 
     const changeOfferedCategoryList = () => {
-        dispatch(changeOfferedCategories(props.shopId,selectedCategoryId));
+        dispatch(changeOfferedCategories(props.shopId,selectedCategoryId,props.allOfferedCateGories));
         props.onDismiss();
     }
 

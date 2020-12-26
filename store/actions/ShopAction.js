@@ -19,6 +19,7 @@ export const fetchShops = () => {
             const allShops = [];
 
             for (const key in resData){
+
                 const shop = new Shop(key,resData[key]['uId'],resData[key]['name'],resData[key]['rating'],resData[key]['ratedNumber'],
                     resData[key]['imageUrl'],resData[key]['detail'],resData[key]['offers'],resData[key]['locationName'],
                         new Location(resData[key]['locationInLatLng']['latitude'],resData[key]['locationInLatLng']['longitude']),
@@ -62,12 +63,24 @@ export const changeDiscount = (shopId,discount) => {
     }
 }
 
-export const changeOfferedCategories = (shopId,catId) => {
-    return{
-        type: CHANGE_OFFERED_CATEGORIES,
-        payload: {
-            shopId: shopId,
-            catId: catId
+export const changeOfferedCategories = (shopId,catId,allOfferedCatIds) => {
+    return async (dispatch) => {
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/shops/${shopId}.json`;
+        try {
+            const response = await axios.patch(url,{
+                'offeredCategoryIds': [...allOfferedCatIds,catId]
+            });
+
+            dispatch({
+                type: CHANGE_OFFERED_CATEGORIES,
+                payload: {
+                    shopId: shopId,
+                    catId: catId
+                }
+            });
+
+        }catch (err){
+            throw err;
         }
     }
 }

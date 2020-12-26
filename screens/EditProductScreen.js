@@ -41,6 +41,7 @@ const EditProductScreen = (props) => {
     },[dispatch,saveHandler]);
 
     const saveHandler = useCallback(() => {
+        console.log(isNameValid,isDescriptionValid,isFullPortionValid,isImageUrlValid)
         if(!isNameValid || !isDescriptionValid || !isFullPortionValid || !isImageUrlValid ){
             return(
                 Alert.alert('enter all fields','all field must enter before submit',[

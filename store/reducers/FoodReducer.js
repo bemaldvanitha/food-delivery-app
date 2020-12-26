@@ -21,7 +21,7 @@ const FoodReducer = (state = initState,action) => {
             return {...state,foods: newFoodList.concat(updatedFood)}
 
         case ADD_FOOD:
-            const newFood = new FoodItem(Math.random().toString(),action.payload.catId,action.payload.shopId,action.payload.name,
+            const newFood = new FoodItem(action.payload.id,action.payload.catId,action.payload.shopId,action.payload.name,
                 action.payload.description,action.payload.fullPortionPrice,action.payload.halfPortionPrice,action.payload.imageUrl,0,0,
                 action.payload.isVegan,action.payload.isVegetarian,action.payload.isSugarFree);
             return {...state,foods: state.foods.concat(newFood)}

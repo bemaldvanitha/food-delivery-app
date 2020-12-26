@@ -26,14 +26,30 @@ export const changeOfferedCategories = (shopId,catId) => {
 }
 
 export const editShop = (shopId,name,detail,locationName,imageUrl) => {
-    return{
-        type: EDIT_SHOP,
-        payload: {
-            shopId: shopId,
-            name: name,
-            detail: detail,
-            locationName: locationName,
-            imageUrl: imageUrl
+    return async (dispatch) => {
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/shops/${shopId}.json`;
+        try{
+            const response = await axios.patch(url,{
+                'name': name,
+                'detail': detail,
+                'locationName': locationName,
+                'imageUrl': imageUrl
+            })
+            const resData = await response.data;
+
+            dispatch({
+                type: EDIT_SHOP,
+                payload: {
+                    shopId: shopId,
+                    name: name,
+                    detail: detail,
+                    locationName: locationName,
+                    imageUrl: imageUrl
+                }
+            });
+
+        }catch (err){
+            throw err;
         }
     }
 }

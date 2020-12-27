@@ -82,19 +82,39 @@ export const addFoods = (catId,shopId,name,description,fullPortionPrice,halfPort
 
 export const editFood = (id,catId,name,description,fullPortionPrice,halfPortionPrice,imageUrl,isVegan,isVegetarian,isSugarFree) => {
     console.log(description);
-    return{
-        type: EDIT_FOOD,
-        payload: {
-            id: id,
-            catId: catId,
-            name: name,
-            description: description,
-            fullPortionPrice: fullPortionPrice,
-            halfPortionPrice: halfPortionPrice,
-            imageUrl: imageUrl,
-            isVegan: isVegan,
-            isVegetarian: isVegetarian,
-            isSugarFree: isSugarFree
+    return async (dispatch) => {
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/foods/${id}.json`;
+        try {
+            const response = await axios.patch(url,{
+                'catId': catId,
+                'name': name,
+                'description': description,
+                'fullPortionPrice': fullPortionPrice,
+                'halfPortionPrice': halfPortionPrice,
+                'imageUrl': imageUrl,
+                'isVegan': isVegan,
+                'isVegetarian': isVegetarian,
+                'isSugarFree': isSugarFree
+            });
+
+            dispatch({
+                type: EDIT_FOOD,
+                payload: {
+                    id: id,
+                    catId: catId,
+                    name: name,
+                    description: description,
+                    fullPortionPrice: fullPortionPrice,
+                    halfPortionPrice: halfPortionPrice,
+                    imageUrl: imageUrl,
+                    isVegan: isVegan,
+                    isVegetarian: isVegetarian,
+                    isSugarFree: isSugarFree
+                }
+            });
+
+        }catch (err){
+            throw err;
         }
     }
 }

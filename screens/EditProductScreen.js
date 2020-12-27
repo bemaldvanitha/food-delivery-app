@@ -38,10 +38,11 @@ const EditProductScreen = (props) => {
 
     useEffect(() => {
         props.navigation.setParams({'save': saveHandler})
-    },[dispatch,saveHandler]);
+    },[dispatch,editProductId,categoryId,name,description,fullPortionPrice,halfPortionPrice,halfPotionAvailable,imageUrl,
+        isVegetarian,isVegan,isSugarFree,saveHandler]);
 
     const saveHandler = useCallback(() => {
-        console.log(isNameValid,isDescriptionValid,isFullPortionValid,isImageUrlValid)
+        // console.log(isNameValid,isDescriptionValid,isFullPortionValid,isImageUrlValid)
         if(!isNameValid || !isDescriptionValid || !isFullPortionValid || !isImageUrlValid ){
             return(
                 Alert.alert('enter all fields','all field must enter before submit',[
@@ -58,7 +59,6 @@ const EditProductScreen = (props) => {
                                 editFood(editProductId,categoryId,name,description,parseFloat(fullPortionPrice),
                                     halfPotionAvailable ? parseFloat(halfPortionPrice) : 0,imageUrl,isVegan,isVegetarian,isSugarFree)
                             );
-                            props.navigation.goBack();
                         }}
                 ]);
 
@@ -70,7 +70,6 @@ const EditProductScreen = (props) => {
                                 addFoods(categoryId,'s1',name,description,parseFloat(fullPortionPrice),
                                     halfPotionAvailable ? parseFloat(halfPortionPrice) : 0,imageUrl,isVegan,isVegetarian,isSugarFree)
                             );
-                            props.navigation.goBack();
                         }}
                 ]);
             }

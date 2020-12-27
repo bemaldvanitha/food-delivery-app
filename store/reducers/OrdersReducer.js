@@ -1,4 +1,4 @@
-import {ADD_ORDERS,SHOP_COMPLETED,SHOP_ACCEPTED,DELIVER_COMPLETED,DELIVER_ACCEPTED} from '../actions/OrdersAction';
+import {ADD_ORDERS,FETCH_ORDERS,SHOP_COMPLETED,SHOP_ACCEPTED,DELIVER_COMPLETED,DELIVER_ACCEPTED} from '../actions/OrdersAction';
 import Orders from '../../models/Orders';
 
 const initState = {
@@ -10,7 +10,7 @@ const OrderReducer = (state = initState,action) => {
         case ADD_ORDERS:
             const order = new Orders(action.payload.id,action.payload.items,action.payload.note,action.payload.totalAmount,action.payload.userId,
                 action.payload.userName,action.payload.userLocation,action.payload.shopId,action.payload.shopName,action.payload.shopLocation,
-                new Date(),false,false,false,false);
+                action.payload.orderDate,false,false,false,false);
             return {...state,orders: state.orders.concat(order)}
 
         case SHOP_ACCEPTED:
@@ -52,6 +52,9 @@ const OrderReducer = (state = initState,action) => {
             updateDeliveryOrder.splice(finishedDeliveryOrderId,1);
 
             return {...state,orders: updateDeliveryOrder.concat(finishedDeliveryOrder)}
+
+        case FETCH_ORDERS:
+            return {...state,orders: action.payload.allOrders}
 
         default: return state;
     }

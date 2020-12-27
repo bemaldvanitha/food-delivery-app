@@ -7,6 +7,7 @@ import {Colors} from '../constants/Colors';
 import ShopItem from "../components/ShopItem";
 import {fetchUsers} from '../store/actions/UsersAction';
 import {fetchShops} from '../store/actions/ShopAction';
+import {fetchFoods} from '../store/actions/FoodAction';
 
 const HomeScreen = (props) => {
     const shops = useSelector(state => state.shop.shops);
@@ -15,6 +16,7 @@ const HomeScreen = (props) => {
     useEffect(() => {
         dispatch(fetchUsers());
         dispatch(fetchShops());
+        dispatch(fetchFoods());
     },[dispatch])
 
     return(

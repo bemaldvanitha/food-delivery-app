@@ -1,5 +1,5 @@
 import {Foods} from '../../Data/dummy-data';
-import {DELETE_FOOD,EDIT_FOOD,ADD_FOOD} from '../actions/FoodAction';
+import {DELETE_FOOD,EDIT_FOOD,ADD_FOOD,FETCH_FOODS} from '../actions/FoodAction';
 import FoodItem from '../../models/FoodItem';
 
 const initState = {
@@ -32,6 +32,9 @@ const FoodReducer = (state = initState,action) => {
             const newFoodsList = [...state.foods];
             newFoodsList.splice(deleteIndex,1);
             return {...state,foods: newFoodsList}
+
+        case FETCH_FOODS:
+            return {...state,foods: action.payload.allFoods}
 
         default: return state;
     }

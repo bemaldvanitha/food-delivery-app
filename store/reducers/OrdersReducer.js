@@ -8,7 +8,7 @@ const initState = {
 const OrderReducer = (state = initState,action) => {
     switch (action.type){
         case ADD_ORDERS:
-            const order = new Orders(Math.random().toString(),action.payload.items,action.payload.note,action.payload.totalAmount,action.payload.userId,
+            const order = new Orders(action.payload.id,action.payload.items,action.payload.note,action.payload.totalAmount,action.payload.userId,
                 action.payload.userName,action.payload.userLocation,action.payload.shopId,action.payload.shopName,action.payload.shopLocation,
                 new Date(),false,false,false,false);
             return {...state,orders: state.orders.concat(order)}

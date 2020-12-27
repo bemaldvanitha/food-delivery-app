@@ -120,10 +120,20 @@ export const editFood = (id,catId,name,description,fullPortionPrice,halfPortionP
 }
 
 export const deleteFood = (id) => {
-    return{
-        type: DELETE_FOOD,
-        payload: {
-            id: id
+    return async (dispatch) => {
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/foods/${id}.json`;
+        try {
+            await axios.delete(url);
+
+            dispatch({
+                type: DELETE_FOOD,
+                payload: {
+                    id: id
+                }
+            });
+
+        }catch (err){
+            throw err;
         }
     }
 }

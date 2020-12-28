@@ -145,19 +145,43 @@ export const shopCompleted = (orderId) => {
 
 
 export const deliveryAccept = (orderId) => {
-    return{
-        type: DELIVER_ACCEPTED,
-        payload: {
-            orderId: orderId
+    return async (dispatch) => {
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/orders/${orderId}.json`;
+        try{
+            const response = await axios.patch(url,{
+                'isDeliverAccept': true
+            });
+
+            dispatch({
+                type: DELIVER_ACCEPTED,
+                payload: {
+                    orderId: orderId
+                }
+            });
+
+        }catch (err) {
+            throw err;
         }
     }
 }
 
 export const deliveryFinish = (orderId) => {
-    return{
-        type: DELIVER_COMPLETED,
-        payload: {
-            orderId: orderId
+    return async (dispatch) => {
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/orders/${orderId}.json`;
+        try{
+            const response = await axios.patch(url,{
+                'isDeliverCompleted': true
+            });
+
+            dispatch({
+                type: DELIVER_COMPLETED,
+                payload: {
+                    orderId: orderId
+                }
+            });
+
+        }catch (err){
+            throw err;
         }
     }
 }

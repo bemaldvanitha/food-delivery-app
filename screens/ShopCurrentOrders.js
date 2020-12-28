@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux';
 import ShopOrderedItem from "../components/ShopOrderedItem";
 
 const ShopCurrentOrders = (props) => {
-    const shopOrders = useSelector(state => state.order.orders).filter((order => order.shopId === 's1'));
+    const shopOrders = useSelector(state => state.order.orders).filter((order => order.shopId === '-MPS5s6g6Ptrqwd7V1cA'));
 
     return(
         <View>

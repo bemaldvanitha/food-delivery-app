@@ -102,19 +102,43 @@ export const addOrders = (items,note,totalAmount,userId,userName,userLocation,sh
 }
 
 export const shopAccepted = (orderId) => {
-    return{
-        type: SHOP_ACCEPTED,
-        payload: {
-            orderId: orderId
+    return async (dispatch) => {
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/orders/${orderId}.json`;
+        try{
+            const response = await axios.patch(url,{
+                'isShopAccept': true
+            });
+
+            dispatch({
+                type: SHOP_ACCEPTED,
+                payload: {
+                    orderId: orderId
+                }
+            });
+
+        }catch (err){
+            throw err;
         }
     }
 }
 
 export const shopCompleted = (orderId) => {
-    return{
-        type: SHOP_COMPLETED,
-        payload: {
-            orderId: orderId
+    return async (dispatch) => {
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/orders/${orderId}.json`;
+        try{
+            const response = await axios.patch(url,{
+                'isShopCompleted': true
+            });
+
+            dispatch({
+                type: SHOP_COMPLETED,
+                payload: {
+                    orderId: orderId
+                }
+            });
+
+        }catch (err){
+            throw err;
         }
     }
 }

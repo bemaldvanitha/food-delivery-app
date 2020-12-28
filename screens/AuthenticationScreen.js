@@ -8,10 +8,51 @@ const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 const AuthenticationScreen = (props) => {
-    const [email,setEmail] = useState('');
-    const [password,setPassword] = useState('');
-    const [reEnteredPassword,setReEnteredPassword] = useState('');
-    const [isSignUp,setIsSignUp] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [reEnteredPassword, setReEnteredPassword] = useState('');
+    const [isSignUp, setIsSignUp] = useState(false);
+
+    const [isEmailValid, setIsEmailValid] = useState(false);
+    const [isPasswordValid, setIsPasswordValid] = useState(false);
+    const [isReEnteredPasswordValid, setIsReEnteredPasswordValid] = useState(false);
+
+    const emailValidator = (text) => {
+
+        if (text.trim().length > 6) {
+
+            const re = /\S+@\S+\.\S+/;
+
+            if (re.test(email.toString())) {
+                setIsEmailValid(true);
+            } else {
+                setIsEmailValid(false);
+            }
+
+        } else {
+            setIsEmailValid(false)
+        }
+
+        setEmail(text);
+    }
+
+    const passwordValidator = (text) => {
+        if (text.trim().length > 6) {
+            setIsPasswordValid(true);
+        } else {
+            setIsPasswordValid(false);
+        }
+        setPassword(text);
+    }
+
+    const reEnteredPasswordValidator = (text) => {
+        if (text.trim().length > 6 && text.trim() === password) {
+            setIsReEnteredPasswordValid(true);
+        } else {
+            setIsReEnteredPasswordValid(false);
+        }
+        setReEnteredPassword(text)
+    }
 
     const toggleButton = () => {
         setIsSignUp(prevState => !prevState);
@@ -21,33 +62,45 @@ const AuthenticationScreen = (props) => {
 
     }
 
-    return(
+    return (
         <View style={styles.screen}>
+
             <View style={styles.inputContainer}>
-                <TextInput value={email} onChangeText={(text) => setEmail(text)} mode='flat' label='enter email'
+                <TextInput value={email} onChangeText={(text) => emailValidator(text)} mode='flat' label='enter email'
                            keyboardType='email-address' style={styles.input}/>
+                {!isEmailValid && <Text style={styles.errorText}>enter valid email</Text>}
             </View>
+
             <View style={styles.inputContainer}>
-                <TextInput value={password} onChangeText={(text) => setPassword(text)} label='enter password' mode='flat'
-                           keyboardType='default' secureTextEntry={true} style={styles.input}/>
+                <TextInput value={password} onChangeText={(text) => passwordValidator(text)} label='enter password'
+                           mode='flat' keyboardType='default' secureTextEntry={true} style={styles.input}/>
+                {!isPasswordValid && <Text style={styles.errorText}>enter valid password</Text>}
             </View>
+
             {
                 isSignUp && <View style={styles.inputContainer}>
-                    <TextInput value={reEnteredPassword} onChangeText={(text) => setReEnteredPassword(text)} label='enter password again'
+                    <TextInput value={reEnteredPassword} onChangeText={(text) => reEnteredPasswordValidator(text)}
+                               label='enter password again'
                                keyboardType='default' secureTextEntry={true} mode='flat' style={styles.input}/>
+                    {!isReEnteredPasswordValid && <Text style={styles.errorText}>enter same password agein</Text>}
                 </View>
             }
+
             <View style={styles.buttonContainer}>
                 <View style={styles.button}>
-                    <Button title={isSignUp ? 'sign up' : 'sign in'} color={Colors.offerColor} onPress={authentication}/>
+                    <Button title={isSignUp ? 'sign up' : 'sign in'} color={Colors.offerColor}
+                            onPress={authentication}/>
                 </View>
                 <View style={styles.button}>
-                    <Button title={isSignUp ? 'set is sign in' : 'set is sign up'} color={Colors.offerColor} onPress={toggleButton}/>
+                    <Button title={isSignUp ? 'set is sign in' : 'set is sign up'} color={Colors.offerColor}
+                            onPress={toggleButton}/>
                 </View>
             </View>
+
         </View>
     )
 }
+
 
 AuthenticationScreen.navigationOptions = {
     headerTitle: 'Authentication'
@@ -83,6 +136,9 @@ const styles= StyleSheet.create({
     },
     button: {
         marginVertical: screenHeight * 0.01,
+    },
+    errorText: {
+        color: 'red'
     }
 });
 

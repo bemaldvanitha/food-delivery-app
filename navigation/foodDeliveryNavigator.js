@@ -1,6 +1,6 @@
 import React from 'react';
 import {Platform,Image} from 'react-native';
-import {createAppContainer} from 'react-navigation';
+import {createAppContainer,createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {createDrawerNavigator} from 'react-navigation-drawer';
@@ -27,6 +27,7 @@ import ShopOwnerScreen from "../screens/ShopOwnerScreen";
 import ShopScreen from "../screens/ShopScreen";
 import EditUserScreen from "../screens/EditUserScreen";
 import EditShopScreen from "../screens/EditShopScreen";
+import AuthenticationScreen from "../screens/AuthenticationScreen";
 import ShopCurrentOrders from "../screens/ShopCurrentOrders";
 import NavigationHeader from '../components/NavigationHeader';
 import DrawerHeader from "../components/NavigationHeader";
@@ -240,4 +241,17 @@ const MainNavigator = createDrawerNavigator({
     contentComponent: (props) => <DrawerHeader {...props}/>
 });
 
-export default createAppContainer(MainNavigator);
+const AuthNavigator = createStackNavigator({
+    auth: {
+        screen: AuthenticationScreen
+    }
+},{
+    defaultNavigationOptions: headerCustomStyles
+});
+
+const FinalNavigator = createSwitchNavigator({
+   Auth: AuthNavigator,
+   Main: MainNavigator
+});
+
+export default createAppContainer(FinalNavigator);

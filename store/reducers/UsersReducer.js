@@ -1,6 +1,7 @@
 import {Users} from '../../Data/dummy-data';
 import User from '../../models/User';
-import {TOGGLE_FAVORITE_FOODS,TOGGLE_FAVORITE_SHOPS,EDIT_USER,FETCH_USERS} from '../actions/UsersAction'
+import Location from "../../models/Location";
+import {TOGGLE_FAVORITE_FOODS,TOGGLE_FAVORITE_SHOPS,EDIT_USER,FETCH_USERS,ADD_USER} from '../actions/UsersAction'
 
 const initState = {
     users: Users
@@ -58,6 +59,13 @@ const UsersReducer = (state = initState,action) => {
 
         case FETCH_USERS:
             return {...state,users: action.payload.users}
+
+        case ADD_USER:
+            const newUser = new User(action.payload.id,action.payload.firstName,action.payload.lastName,action.payload.address,
+                action.payload.telNumber,action.payload.email,action.payload.imageUrl,action.payload.location,new Location(0,0),
+                [],[],action.payload.isDeliverMan,action.payload.isShopOwner);
+
+            return {...state,users: action.payload.users.concat(newUser)}
 
         default: return state;
     }

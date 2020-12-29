@@ -80,7 +80,7 @@ const AuthenticationScreen = (props) => {
 
                     await projectAuth.createUserWithEmailAndPassword(email,password);
 
-
+                    props.navigation.navigate({routeName: 'AddUser'});
 
                 }catch (err){
                     console.log(err.message);
@@ -98,6 +98,8 @@ const AuthenticationScreen = (props) => {
                 try {
 
                     await projectAuth.signInWithEmailAndPassword(email,password);
+
+                    props.navigation.navigate({routeName: 'Main'});
 
                 }catch (err){
                     console.log(err.message);

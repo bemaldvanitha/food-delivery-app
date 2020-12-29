@@ -249,9 +249,19 @@ const AuthNavigator = createStackNavigator({
     defaultNavigationOptions: headerCustomStyles
 });
 
+const AddUserNavigator = createStackNavigator({
+    adduser: {
+        screen: EditUserScreen
+    }
+},{
+    defaultNavigationOptions: headerCustomStyles
+});
+
+
 const FinalNavigator = createSwitchNavigator({
    Auth: AuthNavigator,
-   Main: MainNavigator
+   AddUser: AddUserNavigator,
+   Main: MainNavigator,
 });
 
 export default createAppContainer(FinalNavigator);

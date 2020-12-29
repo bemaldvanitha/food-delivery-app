@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import {projectAuth} from '../../firebase/firebase';
 import User from '../../models/User';
 import Location from "../../models/Location";
 
@@ -145,9 +146,11 @@ export const editUser = (userId,firstName,lastName,email,address,telNumber,image
 
 export const addUser = (firstName,lastName,email,address,telNumber,imageUrl,location,isDeliveryMan,isShopOwner) => {
     return async (dispatch) => {
-        const url = 'https://food-delivery-2dc43-default-rtdb.firebaseio.com/user.json';
+        const currentUserId = projectAuth.currentUser.uid;
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/user/${currentUserId}.json`;
+
         try{
-            const response = await axios.post(url,{
+            const response = await axios.patch(url,{
                'firstName': firstName,
                'lastName': lastName,
                'email': email,
@@ -164,7 +167,7 @@ export const addUser = (firstName,lastName,email,address,telNumber,imageUrl,loca
             dispatch({
                 type: ADD_USER,
                 payload: {
-                    id: resData['name'],
+                    id: currentUserId,
                     firstName: firstName,
                     lastName: lastName,
                     email: email,

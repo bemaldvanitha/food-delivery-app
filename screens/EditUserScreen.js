@@ -5,7 +5,7 @@ import {Ionicons} from '@expo/vector-icons';
 import {useSelector,useDispatch} from 'react-redux';
 
 import {Colors} from '../constants/Colors';
-import {editUser} from '../store/actions/UsersAction';
+import {editUser,addUser} from '../store/actions/UsersAction';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -52,7 +52,15 @@ const EditUserScreen = (props) => {
                         }},
                 ]);
             }else{
-
+                Alert.alert('are you sure','sure about details',[
+                    {title: 'no'},
+                    {title: 'yes',onPress: () => {
+                            dispatch(
+                                addUser(firstName,lastName,email,address,telNumber,imageUrl,location,isDeliveryMan,isShopOwner)
+                            );
+                            props.navigation.navigate({routeName: 'Main'});
+                        }},
+                ]);
             }
         }
     },[curUserId,firstName,lastName,email,address,telNumber,imageUrl,location,isDeliveryMan,isShopOwner,curUser]);

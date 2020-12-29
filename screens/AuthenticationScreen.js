@@ -1,7 +1,8 @@
-import React,{useState} from 'react';
-import {StyleSheet,Text,View,Button,Dimensions} from 'react-native';
+import React,{useState,useEffect} from 'react';
+import {StyleSheet,Text,View,Button,Dimensions,Alert,ActivityIndicator} from 'react-native';
 import {TextInput} from 'react-native-paper';
 
+import {projectAuth} from '../firebase/firebase';
 import {Colors} from '../constants/Colors';
 
 const screenWidth = Dimensions.get('screen').width;
@@ -16,6 +17,8 @@ const AuthenticationScreen = (props) => {
     const [isEmailValid, setIsEmailValid] = useState(false);
     const [isPasswordValid, setIsPasswordValid] = useState(false);
     const [isReEnteredPasswordValid, setIsReEnteredPasswordValid] = useState(false);
+    const [error,setError] = useState(null);
+    const [isLoading,setIsLoading] = useState(false);
 
     const emailValidator = (text) => {
 
@@ -58,12 +61,64 @@ const AuthenticationScreen = (props) => {
         setIsSignUp(prevState => !prevState);
     }
 
-    const authentication = () => {
+    useEffect(() => {
+        if(error){
+            Alert.alert('auth error',error,[
+                {text: 'ok'}
+            ])
+        }
+    },[error]);
 
+    const authentication = async () => {
+        setError(null);
+        setIsLoading(true);
+
+        if(isSignUp){
+            if(isEmailValid && isPasswordValid && isReEnteredPasswordValid){
+
+                try {
+
+                    await projectAuth.createUserWithEmailAndPassword(email,password);
+
+
+
+                }catch (err){
+                    console.log(err.message);
+                    setError(err.message);
+                }
+
+            }else{
+                Alert.alert('fill all fields','all fields must fill',[
+                    {text: 'ok'}
+                ]);
+            }
+        }else{
+            if(isEmailValid && isPasswordValid){
+
+                try {
+
+                    await projectAuth.signInWithEmailAndPassword(email,password);
+
+                }catch (err){
+                    console.log(err.message);
+                    setError(err.message);
+                }
+
+            }else {
+                Alert.alert('fill all fields','all fields must fill',[
+                    {text: 'ok'}
+                ]);
+            }
+        }
+        setIsLoading(false);
     }
 
     return (
         <View style={styles.screen}>
+
+            {
+                isLoading && <ActivityIndicator size='large' color={Colors.offerColor}/>
+            }
 
             <View style={styles.inputContainer}>
                 <TextInput value={email} onChangeText={(text) => emailValidator(text)} mode='flat' label='enter email'

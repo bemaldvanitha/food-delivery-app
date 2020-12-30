@@ -101,7 +101,7 @@ const AuthenticationScreen = (props) => {
                     await projectAuth.signInWithEmailAndPassword(email,password);
 
                     setIsLoading(false);
-                    props.navigation.navigate({routeName: 'AddUser'});
+                    props.navigation.navigate({routeName: 'Main'});
 
                 }catch (err){
                     console.log(err.message);

@@ -1,5 +1,5 @@
 import React,{useState,useCallback,useEffect} from 'react';
-import {View,StyleSheet,Text,Image,ScrollView,Switch,Dimensions,Alert,Platform} from 'react-native';
+import {View,StyleSheet,Text,Image,ScrollView,Switch,Dimensions,Alert,Platform,ActivityIndicator} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {Ionicons} from '@expo/vector-icons';
 import {useSelector,useDispatch} from 'react-redux';
@@ -29,6 +29,7 @@ const EditUserScreen = (props) => {
     const [isShopOwner,setIsShopOwner] = useState(!!curUserId ? curUser.isShopOwner : false);
 
     const [image,setImage] = useState();
+    const [loading,setLoading] = useState(false);
 
     const [isFirstNameValid,setIsFirstNameValid] = useState(!!curUserId);
     const [isLastNameValid,setIsLastNameValid] = useState(!!curUserId);
@@ -41,7 +42,7 @@ const EditUserScreen = (props) => {
     let url = '';
 
     const saveHandler = useCallback(() => {
-        if(!isFirstNameValid || !isLastNameValid || !isEmailValid || !isAddressValid || !isImageUrlValid || !isTelNumberValid ||
+        if(!isFirstNameValid || !isLastNameValid || !isEmailValid || !isAddressValid || !isTelNumberValid ||
             !isLocationValid){
             Alert.alert('enter all fields','enter all fields',[
                 {title: 'ok'}
@@ -60,11 +61,17 @@ const EditUserScreen = (props) => {
             }else{
                 Alert.alert('are you sure','sure about details',[
                     {title: 'no'},
-                    {title: 'yes',onPress: () => {
-                            dispatch(
-                                addUser(firstName,lastName,email,address,telNumber,imageUrl,location,isDeliveryMan,isShopOwner)
-                            );
-                            props.navigation.navigate({routeName: 'Main'});
+                    {title: 'yes',onPress: async () => {
+                            setLoading(true);
+                            await handleUpload();
+
+                            setTimeout(() => {
+                                dispatch(
+                                    addUser(firstName,lastName,email,address,telNumber,url,location,isDeliveryMan,isShopOwner)
+                                );
+                                setLoading(false);
+                                props.navigation.navigate({routeName: 'Main'});
+                            },8000);
                         }},
                 ]);
             }
@@ -89,6 +96,7 @@ const EditUserScreen = (props) => {
             throw err;
         }
     }
+
     console.log(url);
 
     useEffect(() => {
@@ -163,9 +171,11 @@ const EditUserScreen = (props) => {
         console.log(image);
     }
 
+
     return(
         <ScrollView>
             <View>
+                {loading && <ActivityIndicator size='large' color={Colors.offerColor}/> }
                 <View style={styles.inputContainer}>
                     <TextInput value={firstName} onChangeText={(text) => firstNameValidate(text)} label='enter first name'/>
                     {!isFirstNameValid && <Text style={styles.errorText}>enter valid first name</Text>}

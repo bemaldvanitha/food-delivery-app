@@ -27,6 +27,8 @@ const EditUserScreen = (props) => {
     const [isDeliveryMan,setIsDeliveryMan] = useState(!!curUserId ? curUser.isDeliverMan : false);
     const [isShopOwner,setIsShopOwner] = useState(!!curUserId ? curUser.isShopOwner : false);
 
+    const [image,setImage] = useState();
+
     const [isFirstNameValid,setIsFirstNameValid] = useState(!!curUserId);
     const [isLastNameValid,setIsLastNameValid] = useState(!!curUserId);
     const [isEmailValid,setIsEmailValid] = useState(!!curUserId);
@@ -133,6 +135,10 @@ const EditUserScreen = (props) => {
         setLocation(text);
     }
 
+    const handleImage = (image) => {
+        setImage(image);
+    }
+
     return(
         <ScrollView>
             <View>
@@ -163,7 +169,7 @@ const EditUserScreen = (props) => {
                     </View>
                     {!isImageUrlValid && <Text style={styles.errorText}>enter valid image url</Text>}
                 </View>*/}
-                <ImagePickers/>
+                <ImagePickers handleImage={handleImage}/>
                 <View style={styles.inputContainer}>
                     <TextInput value={location} onChangeText={(text) => locationValidate(text)} label='enter location'/>
                     {!isLocationValid && <Text style={styles.errorText}>enter valid location</Text>}

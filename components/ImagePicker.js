@@ -27,11 +27,13 @@ const ImagePickers = (props) => {
         if(!hasPermission){
             return;
         }
-        const image = await ImagePicker.launchCameraAsync({
+        const image = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
             quality: 0.4,
-        });
-        //console.log(image)
+        })
+        // console.log(image);
+
+        props.handleImage(image);
         setPickedImage(image.uri);
     }
 
@@ -39,7 +41,7 @@ const ImagePickers = (props) => {
         <View style={styles.container}>
             <View style={styles.box}>
                 {!pickedImage && <Text>no picture</Text>}
-
+                <Image source={{uri: pickedImage}} style={styles.image}/>
             </View>
             <View style={styles.buttonContainer}>
                 <Button title='get image' color={Colors.offerColor} onPress={takeImage}/>
@@ -51,17 +53,20 @@ const ImagePickers = (props) => {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
+        alignItems: 'center'
     },
     box: {
-        borderRadius: 1,
+        borderWidth: 1,
+        borderRadius: 15,
         borderColor: 'black',
         height: screenHeight * 0.15,
         width: screenWidth * 0.3,
+        overflow: 'hidden',
     },
     image: {
-        width: 150,
-        height: 150
+        width: '100%',
+        height: '100%',
     },
     buttonContainer: {
 

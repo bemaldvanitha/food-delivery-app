@@ -7,6 +7,7 @@ import {useSelector,useDispatch} from 'react-redux';
 import {Colors} from '../constants/Colors';
 import {editUser,addUser} from '../store/actions/UsersAction';
 import ImagePickers from "../components/ImagePicker";
+import {projectStorage} from '../firebase/firebase';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -36,6 +37,8 @@ const EditUserScreen = (props) => {
     const [isImageUrlValid,setIsImageUrlValid] = useState(!!curUserId);
     const [isTelNumberValid,setIsTelNumberValid] = useState(!!curUserId);
     const [isLocationValid,setIsLocationValid] = useState(!!curUserId);
+
+    let url = '';
 
     const saveHandler = useCallback(() => {
         if(!isFirstNameValid || !isLastNameValid || !isEmailValid || !isAddressValid || !isImageUrlValid || !isTelNumberValid ||
@@ -67,6 +70,26 @@ const EditUserScreen = (props) => {
             }
         }
     },[curUserId,firstName,lastName,email,address,telNumber,imageUrl,location,isDeliveryMan,isShopOwner,curUser]);
+
+    const handleUpload = async () => {
+        try{
+            const imageUrl = image.uri;
+            const imageName = imageUrl.split('/').pop();
+            const response = await fetch(imageUrl);
+            const uploadImage = await response.blob();
+
+            const ref = projectStorage.ref().child('user').child(imageName);
+            await ref.put(uploadImage);
+            const downloadUrl = await ref.getDownloadURL();
+
+            url = downloadUrl;
+
+        }catch (err){
+            console.log(err);
+            throw err;
+        }
+    }
+    console.log(url);
 
     useEffect(() => {
         props.navigation.setParams({'save': saveHandler});
@@ -137,6 +160,7 @@ const EditUserScreen = (props) => {
 
     const handleImage = (image) => {
         setImage(image);
+        console.log(image);
     }
 
     return(

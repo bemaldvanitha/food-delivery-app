@@ -6,6 +6,7 @@ import {useSelector,useDispatch} from 'react-redux';
 
 import {Colors} from '../constants/Colors';
 import {editUser,addUser} from '../store/actions/UsersAction';
+import ImagePickers from "../components/ImagePicker";
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -155,13 +156,14 @@ const EditUserScreen = (props) => {
                     <TextInput value={telNumber} onChangeText={(text) => telPhoneNumberValidate(text)} label='enter telephone number'/>
                     {!isTelNumberValid && <Text style={styles.errorText}>enter valid phone number</Text>}
                 </View>
-                <View style={styles.inputContainer}>
+                {/*<View style={styles.inputContainer}>
                     <View style={styles.imageInputContainer}>
                         <Image source={{uri: imageUrl}} style={styles.image}/>
                         <TextInput style={styles.imageUrlInput} value={imageUrl} onChangeText={(text) => imageUrlValidate(text)} label='enter image url' multiline={true} numberOfLines={4}/>
                     </View>
                     {!isImageUrlValid && <Text style={styles.errorText}>enter valid image url</Text>}
-                </View>
+                </View>*/}
+                <ImagePickers/>
                 <View style={styles.inputContainer}>
                     <TextInput value={location} onChangeText={(text) => locationValidate(text)} label='enter location'/>
                     {!isLocationValid && <Text style={styles.errorText}>enter valid location</Text>}

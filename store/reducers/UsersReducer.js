@@ -4,7 +4,7 @@ import Location from "../../models/Location";
 import {TOGGLE_FAVORITE_FOODS,TOGGLE_FAVORITE_SHOPS,EDIT_USER,FETCH_USERS,ADD_USER} from '../actions/UsersAction'
 
 const initState = {
-    users: Users
+    users: [],
 }
 
 const UsersReducer = (state = initState,action) => {

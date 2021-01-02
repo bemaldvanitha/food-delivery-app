@@ -6,13 +6,15 @@ import {Ionicons,AntDesign} from '@expo/vector-icons';
 import {Categories} from '../Data/dummy-data';
 import Food from "../components/Food";
 import {toggleFavoriteShops} from "../store/actions/UsersAction";
+import {projectAuth} from '../firebase/firebase';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 const ShopScreen = (props) => {
     const dispatch = useDispatch();
-    const allFav = useSelector(state => state.user.users).find(user => user.id === 'u1').favoriteShopIds;
+    const userId = projectAuth.currentUser.uid;
+    const allFav = useSelector(state => state.user.users).find(user => user.id === userId).favoriteShopIds;
     const isFav = allFav.findIndex(fav => fav === props.id);
 
     const shopId = props.navigation.getParam('id');
@@ -29,7 +31,7 @@ const ShopScreen = (props) => {
     },[selShop]);
 
     const toggleFavorite = () => {
-        dispatch(toggleFavoriteShops('u1',props.id,allFav,isFav !== -1));
+        dispatch(toggleFavoriteShops(userId,props.id,allFav,isFav !== -1));
     }
 
     return(

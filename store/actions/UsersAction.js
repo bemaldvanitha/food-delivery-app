@@ -4,6 +4,7 @@ import {projectAuth} from '../../firebase/firebase';
 import User from '../../models/User';
 import Location from "../../models/Location";
 
+
 export const TOGGLE_FAVORITE_SHOPS = 'TOGGLE_FAVORITE_SHOPS';
 export const TOGGLE_FAVORITE_FOODS = 'TOGGLE_FAVORITE_FOODS';
 export const EDIT_USER = 'EDIT_USER';
@@ -83,10 +84,15 @@ export const fetchUsers = () => {
             const allUsers = [];
 
             for (const key in resData){
+                if(resData[key]['favoriteFoodIds'] === undefined){
+                    console.log('fuck')
+                }else{
+                    console.log(resData[key]['favoriteFoodIds'])
+                }
                 const user = new User(key,resData[key]['firstName'],resData[key]['lastName'],resData[key]['address'],resData[key]['telNumber'],
                     resData[key]['email'],resData[key]['imageUrl'],resData[key]['location'], new Location(0,0),
-                    resData[key]['favoriteFoodIds'] !== null ?  resData[key]['favoriteFoodIds'] : []
-                    ,resData[key]['favoriteShopIds'] !== null ? resData[key]['favoriteShopIds'] : []
+                    resData[key]['favoriteFoodIds'] === undefined ? [] : resData[key]['favoriteFoodIds']
+                    ,resData[key]['favoriteShopIds'] === undefined ? [] : resData[key]['favoriteShopIds']
                     ,resData[key]['isDeliveryMan'],resData[key]['isShopOwner']);
 
                 allUsers.push(user);

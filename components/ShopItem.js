@@ -6,9 +6,12 @@ import {Categories} from '../Data/dummy-data';
 import {Ionicons} from '@expo/vector-icons';
 import {Colors} from '../constants/Colors';
 import {toggleFavoriteShops} from '../store/actions/UsersAction';
+import {projectAuth} from '../firebase/firebase';
 
 const ShopItem = (props) => {
-    const allFav = useSelector(state => state.user.users).find(user => user.id === 'u1').favoriteShopIds;
+    const currentUserUid = projectAuth.currentUser.uid;
+    console.log(useSelector(state => state.user.users).find(user => user.id === currentUserUid));
+    const allFav = useSelector(state => state.user.users).find(user => user.id === currentUserUid).favoriteShopIds;
     const isFav = allFav.findIndex(fav => fav === props.id);
     const dispatch = useDispatch();
     const offeredCategoryNames = [];
@@ -18,7 +21,7 @@ const ShopItem = (props) => {
     })
 
     const toggleFavorite = () => {
-        dispatch(toggleFavoriteShops('u1',props.id,allFav,isFav !== -1));
+        dispatch(toggleFavoriteShops(currentUserUid,props.id,allFav,isFav !== -1));
     }
 
     return(

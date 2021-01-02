@@ -5,11 +5,14 @@ import {Colors} from "../constants/Colors";
 import {useSelector} from 'react-redux';
 import {Avatar,Divider} from 'react-native-paper';
 
+import {projectAuth} from '../firebase/firebase';
+
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 const AccountScreen = (props) => {
-    const curUser = useSelector(state => state.user.users).find(user => user.id === 'u1');
+    const currentUserId = projectAuth.currentUser.uid;
+    const curUser = useSelector(state => state.user.users).find(user => user.id === currentUserId);
 
     return(
         <View style={styles.screen}>

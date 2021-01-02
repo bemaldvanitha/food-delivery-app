@@ -5,14 +5,16 @@ import {useSelector} from 'react-redux';
 import ShopItem from "../components/ShopItem";
 import Food from "../components/Food";
 import {Colors} from '../constants/Colors';
+import {projectAuth} from '../firebase/firebase';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 const FavoriteScreen = (props) => {
+    const currentUserId = projectAuth.currentUser.uid;
     const [selectIndex,setSelectIndex] = useState(0);
-    const favoriteFoodIds = useSelector(state => state.user.users).find(user => user.id === 'u1').favoriteFoodIds;
-    const favoriteShopIds = useSelector(state => state.user.users).find(user => user.id === 'u1').favoriteShopIds;
+    const favoriteFoodIds = useSelector(state => state.user.users).find(user => user.id === currentUserId).favoriteFoodIds;
+    const favoriteShopIds = useSelector(state => state.user.users).find(user => user.id === currentUserId).favoriteShopIds;
     const foods = useSelector(state => state.food.foods);
     const shops = useSelector(state => state.shop.shops);
 

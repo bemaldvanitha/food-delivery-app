@@ -6,12 +6,14 @@ import {Ionicons} from '@expo/vector-icons';
 
 import {Colors} from '../constants/Colors';
 import ChangePlaceModal from "../components/ChangePlaceModal";
+import {projectAuth} from '../firebase/firebase';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 const SettingsScreen = (props) => {
-    const curUser = useSelector(state => state.user.users).find(user => user.id === 'u1');
+    const userId = projectAuth.currentUser.uid;
+    const curUser = useSelector(state => state.user.users).find(user => user.id === userId);
     const [visibleModal,setVisibleModal] = useState(false);
 
     const showModal = () => {

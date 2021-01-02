@@ -7,11 +7,13 @@ import {Ionicons,AntDesign} from '@expo/vector-icons';
 import {Colors} from '../constants/Colors';
 import {addBasket} from '../store/actions/BasketAction';
 import {toggleFavoriteFoods} from '../store/actions/UsersAction';
+import {projectAuth} from '../firebase/firebase';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 const FoodItemScreen = (props) => {
+    const userId = projectAuth.currentUser.uid;
     const foodId = props.navigation.getParam('id');
     const selFood = useSelector(state => state.food.foods).find(food => food.id === foodId);
     const [selectedSize,setSelectedSize] = useState('full');
@@ -19,7 +21,7 @@ const FoodItemScreen = (props) => {
     const [quantity,setQuantity] = useState(1);
 
     const dispatch = useDispatch();
-    const allFav = useSelector(state => state.user.users).find(user => user.id === 'u1').favoriteFoodIds;
+    const allFav = useSelector(state => state.user.users).find(user => user.id === userId).favoriteFoodIds;
     const isFav = allFav.findIndex(fav => fav === foodId);
 
     useEffect(() => {
@@ -39,7 +41,7 @@ const FoodItemScreen = (props) => {
     }
 
     const toggleFavoriteFood = () => {
-        dispatch(toggleFavoriteFoods('u1',foodId,allFav,isFav !== -1));
+        dispatch(toggleFavoriteFoods(userId,foodId,allFav,isFav !== -1));
     }
 
     return(

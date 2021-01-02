@@ -9,11 +9,13 @@ import CurrentLocationMap from "../components/CurrentLocationMap";
 import AddNotes from "../components/AddNotesModal";
 import OrderItem from '../models/OrderItem';
 import Location from "../models/Location";
+import {projectAuth} from '../firebase/firebase';
 
 import {Colors} from '../constants/Colors';
 
 const SetDeliveryAddressScreen = (props) => {
-    const currentUser = useSelector(state => state.user.users).find(user => user.id === 'u1');
+    const userId = projectAuth.currentUser.uid;
+    const currentUser = useSelector(state => state.user.users).find(user => user.id === userId);
     const currentBasket = useSelector(state => state.basket.basket);
     const orderShop = useSelector(state => state.shop.shops).find(shop => shop.id === currentBasket[0].shopId);
     const dispatch = useDispatch();

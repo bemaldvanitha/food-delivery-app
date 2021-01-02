@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import FoodItem from '../../models/FoodItem'
+import {projectAuth} from '../../firebase/firebase';
 
 export const ADD_FOOD = 'ADD_FOOD';
 export const EDIT_FOOD = 'EDIT_FOOD';
@@ -42,7 +43,8 @@ export const fetchFoods = () => {
 
 export const addFoods = (catId,shopId,name,description,fullPortionPrice,halfPortionPrice,imageUrl,isVegan,isVegetarian,isSugarFree) => {
     return async (dispatch) => {
-        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/foods.json`;
+        const userToken = await projectAuth.currentUser.getIdTokenResult(true);
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/foods.json?auth=${userToken.token}`;
         try {
             const response = await axios.post(url,{
                 'catId': catId,
@@ -83,7 +85,8 @@ export const addFoods = (catId,shopId,name,description,fullPortionPrice,halfPort
 export const editFood = (id,catId,name,description,fullPortionPrice,halfPortionPrice,imageUrl,isVegan,isVegetarian,isSugarFree) => {
     console.log(description);
     return async (dispatch) => {
-        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/foods/${id}.json`;
+        const userToken = await projectAuth.currentUser.getIdTokenResult(true);
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/foods/${id}.json?auth=${userToken.token}`;
         try {
             const response = await axios.patch(url,{
                 'catId': catId,
@@ -121,7 +124,8 @@ export const editFood = (id,catId,name,description,fullPortionPrice,halfPortionP
 
 export const deleteFood = (id) => {
     return async (dispatch) => {
-        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/foods/${id}.json`;
+        const userToken = await projectAuth.currentUser.getIdTokenResult(true);
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/foods/${id}.json?auth=${userToken.token}`;
         try {
             await axios.delete(url);
 

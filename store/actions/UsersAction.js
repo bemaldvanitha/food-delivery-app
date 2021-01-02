@@ -4,7 +4,6 @@ import {projectAuth} from '../../firebase/firebase';
 import User from '../../models/User';
 import Location from "../../models/Location";
 
-
 export const TOGGLE_FAVORITE_SHOPS = 'TOGGLE_FAVORITE_SHOPS';
 export const TOGGLE_FAVORITE_FOODS = 'TOGGLE_FAVORITE_FOODS';
 export const EDIT_USER = 'EDIT_USER';
@@ -13,7 +12,8 @@ export const ADD_USER = 'ADD_USER';
 
 export const toggleFavoriteShops = (userId,shopId,allFav,isFav) => {
     return async (dispatch) => {
-        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/user/${userId}.json`;
+        const userToken = await projectAuth.currentUser.getIdTokenResult(true);
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/user/${userId}.json?auth=${userToken.token}`;
 
         if(isFav){
             const removedFav = allFav.filter(id => id !== shopId);
@@ -43,7 +43,8 @@ export const toggleFavoriteShops = (userId,shopId,allFav,isFav) => {
 
 export const toggleFavoriteFoods = (userId,foodId,allFav,isFav) => {
     return async (dispatch) => {
-        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/user/${userId}.json`;
+        const userToken = await projectAuth.currentUser.getIdTokenResult(true);
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/user/${userId}.json?auth=${userToken.token}`;
 
         try {
             if(isFav){
@@ -114,7 +115,8 @@ export const fetchUsers = () => {
 export const editUser = (userId,firstName,lastName,email,address,telNumber,imageUrl,location,isDeliveryMan,isShopOwner) => {
     return async (dispatch) => {
         try{
-            const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/user/${userId}.json`;
+            const userToken = await projectAuth.currentUser.getIdTokenResult(true);
+            const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/user/${userId}.json?auth=${userToken.token}`;
 
             const response = await axios.patch(url,{
                 firstName: firstName,
@@ -152,8 +154,9 @@ export const editUser = (userId,firstName,lastName,email,address,telNumber,image
 
 export const addUser = (firstName,lastName,email,address,telNumber,imageUrl,location,isDeliveryMan,isShopOwner) => {
     return async (dispatch) => {
+        const userToken = await projectAuth.currentUser.getIdTokenResult(true);
         const currentUserId = projectAuth.currentUser.uid;
-        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/user/${currentUserId}.json`;
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/user/${currentUserId}.json?auth=${userToken.token}`;
 
         try{
             const response = await axios.patch(url,{

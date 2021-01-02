@@ -2,6 +2,7 @@ import axios from "axios";
 
 import Shop from '../../models/Shop';
 import Location from "../../models/Location";
+import {projectAuth} from '../../firebase/firebase';
 
 export const CHANGE_DISCOUNT = 'CHANGE_DISCOUNT';
 export const CHANGE_OFFERED_CATEGORIES = 'CHANGE_OFFERED_CATEGORIES';
@@ -43,7 +44,8 @@ export const fetchShops = () => {
 
 export const changeDiscount = (shopId,discount) => {
     return async (dispatch) => {
-        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/shops/${shopId}.json`;
+        const token = await projectAuth.currentUser.getIdTokenResult(true);
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/shops/${shopId}.json?auth=${token.token}`;
         try{
             const response = await axios.patch(url,{
                 'offers': discount
@@ -65,7 +67,8 @@ export const changeDiscount = (shopId,discount) => {
 
 export const changeOfferedCategories = (shopId,catId,allOfferedCatIds) => {
     return async (dispatch) => {
-        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/shops/${shopId}.json`;
+        const token = await projectAuth.currentUser.getIdTokenResult(true);
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/shops/${shopId}.json?auth=${token.token}`;
         try {
             const response = await axios.patch(url,{
                 'offeredCategoryIds': [...allOfferedCatIds,catId]
@@ -87,7 +90,8 @@ export const changeOfferedCategories = (shopId,catId,allOfferedCatIds) => {
 
 export const editShop = (shopId,name,detail,locationName,imageUrl) => {
     return async (dispatch) => {
-        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/shops/${shopId}.json`;
+        const token = await projectAuth.currentUser.getIdTokenResult(true);
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/shops/${shopId}.json?auth=${token.token}`;
         try{
             const response = await axios.patch(url,{
                 'name': name,
@@ -116,7 +120,8 @@ export const editShop = (shopId,name,detail,locationName,imageUrl) => {
 
 export const addShop = (uId,name,detail,locationName,imageUrl,locationInLatLng) => {
     return async (dispatch) => {
-        const url = 'https://food-delivery-2dc43-default-rtdb.firebaseio.com/shops.json';
+        const token = await projectAuth.currentUser.getIdTokenResult(true);
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/shops.json?auth=${token.token}`;
 
         try{
             const response = await axios.post(url,{

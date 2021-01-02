@@ -3,6 +3,7 @@ import axios from "axios";
 import OrderItem from '../../models/OrderItem';
 import Orders from '../../models/Orders';
 import Location from '../../models/Location';
+import {projectAuth} from '../../firebase/firebase';
 
 export const FETCH_ORDERS = 'FETCH_ORDERS';
 export const ADD_ORDERS = 'ADD_ORDERS';
@@ -56,7 +57,8 @@ export const fetchOrders = () => {
 
 export const addOrders = (items,note,totalAmount,userId,userName,userLocation,shopId,shopName,shopLocation) => {
     return async (dispatch) => {
-        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/orders.json`;
+        const userToken = await projectAuth.currentUser.getIdTokenResult(true);
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/orders.json?auth=${userToken.token}`;
         const orderDate = new Date().toISOString();
 
         try {
@@ -103,7 +105,8 @@ export const addOrders = (items,note,totalAmount,userId,userName,userLocation,sh
 
 export const shopAccepted = (orderId) => {
     return async (dispatch) => {
-        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/orders/${orderId}.json`;
+        const userToken = await projectAuth.currentUser.getIdTokenResult(true);
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/orders/${orderId}.json?auth=${userToken.token}`;
         try{
             const response = await axios.patch(url,{
                 'isShopAccept': true
@@ -124,7 +127,8 @@ export const shopAccepted = (orderId) => {
 
 export const shopCompleted = (orderId) => {
     return async (dispatch) => {
-        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/orders/${orderId}.json`;
+        const userToken = await projectAuth.currentUser.getIdTokenResult(true);
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/orders/${orderId}.json?auth=${userToken.token}`;
         try{
             const response = await axios.patch(url,{
                 'isShopCompleted': true
@@ -146,7 +150,8 @@ export const shopCompleted = (orderId) => {
 
 export const deliveryAccept = (orderId) => {
     return async (dispatch) => {
-        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/orders/${orderId}.json`;
+        const userToken = await projectAuth.currentUser.getIdTokenResult(true);
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/orders/${orderId}.json?auth=${userToken.token}`;
         try{
             const response = await axios.patch(url,{
                 'isDeliverAccept': true
@@ -167,7 +172,8 @@ export const deliveryAccept = (orderId) => {
 
 export const deliveryFinish = (orderId) => {
     return async (dispatch) => {
-        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/orders/${orderId}.json`;
+        const userToken = await projectAuth.currentUser.getIdTokenResult(true);
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/orders/${orderId}.json?auth=${userToken.token}`;
         try{
             const response = await axios.patch(url,{
                 'isDeliverCompleted': true

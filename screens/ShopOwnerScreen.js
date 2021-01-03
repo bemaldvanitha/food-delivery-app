@@ -50,8 +50,8 @@ const ShopOwnerScreen = (props) => {
 
         } else {
 
-            const currentShop = useSelector(state => state.shop.shops).find(shop => shop.id === '-MPS5s6g6Ptrqwd7V1cA');
-            const shopFoods = useSelector(state => state.food.foods).filter(food => food.shopId === '-MPS5s6g6Ptrqwd7V1cA');
+            const currentShop = useSelector(state => state.shop.shops).find(shop => shop.uId === userId);
+            const shopFoods = useSelector(state => state.food.foods).filter(food => food.shopId === currentShop.id);
 
             const selectedCategories  = [];
             currentShop.offeredCategoryIds.map(id => {

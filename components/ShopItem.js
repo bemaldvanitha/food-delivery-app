@@ -10,7 +10,7 @@ import {projectAuth} from '../firebase/firebase';
 
 const ShopItem = (props) => {
     const currentUserUid = projectAuth.currentUser.uid;
-    console.log(useSelector(state => state.user.users).find(user => user.id === currentUserUid));
+    //console.log(useSelector(state => state.user.users).find(user => user.id === currentUserUid));
     const allFav = useSelector(state => state.user.users).find(user => user.id === currentUserUid).favoriteShopIds;
     const isFav = allFav.findIndex(fav => fav === props.id);
     const dispatch = useDispatch();

@@ -50,7 +50,7 @@ const UsersReducer = (state = initState,action) => {
             const editUser = state.users.find(user => user.id === action.payload.userId);
 
             const updatedUser = new User(editUser.id,action.payload.firstName,action.payload.lastName,action.payload.address,
-                action.payload.telNumber,action.payload.email,action.payload.imageUrl,action.payload.location,editUser.locationLatLng,
+                action.payload.telNumber,action.payload.email,editUser.imageUrl,action.payload.location,editUser.locationLatLng,
                 editUser.favoriteFoodIds,editUser.favoriteShopIds,action.payload.isDeliveryMan,action.payload.isShopOwner);
 
             const updatedList = [...state.users];

@@ -54,7 +54,7 @@ const EditUserScreen = (props) => {
                     {title: 'no'},
                     {title: 'yes',onPress: () => {
                             dispatch(
-                                editUser(curUserId,firstName,lastName,email,address,telNumber,imageUrl,location,isDeliveryMan,isShopOwner)
+                                editUser(curUserId,firstName,lastName,email,address,telNumber,location,isDeliveryMan,isShopOwner)
                             );
                         }},
                 ]);
@@ -148,15 +148,6 @@ const EditUserScreen = (props) => {
         setTelNumber(text);
     }
 
-    const imageUrlValidate = (text) => {
-        if(text.length > 8 && (text.includes('http') || text.includes('https'))){
-            setIsImageUrlValid(true);
-        }else{
-            setIsImageUrlValid(false);
-        }
-        setImageUrl(text);
-    }
-
     const locationValidate = (text) => {
         if(text.length > 5){
             setIsLocationValid(true);
@@ -196,14 +187,9 @@ const EditUserScreen = (props) => {
                     <TextInput value={telNumber} onChangeText={(text) => telPhoneNumberValidate(text)} label='enter telephone number'/>
                     {!isTelNumberValid && <Text style={styles.errorText}>enter valid phone number</Text>}
                 </View>
-                {/*<View style={styles.inputContainer}>
-                    <View style={styles.imageInputContainer}>
-                        <Image source={{uri: imageUrl}} style={styles.image}/>
-                        <TextInput style={styles.imageUrlInput} value={imageUrl} onChangeText={(text) => imageUrlValidate(text)} label='enter image url' multiline={true} numberOfLines={4}/>
-                    </View>
-                    {!isImageUrlValid && <Text style={styles.errorText}>enter valid image url</Text>}
-                </View>*/}
-                <ImagePickers handleImage={handleImage}/>
+                {
+                    curUserId === null && <ImagePickers handleImage={handleImage}/>
+                }
                 <View style={styles.inputContainer}>
                     <TextInput value={location} onChangeText={(text) => locationValidate(text)} label='enter location'/>
                     {!isLocationValid && <Text style={styles.errorText}>enter valid location</Text>}

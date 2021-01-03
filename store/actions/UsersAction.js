@@ -112,7 +112,7 @@ export const fetchUsers = () => {
     }
 }
 
-export const editUser = (userId,firstName,lastName,email,address,telNumber,imageUrl,location,isDeliveryMan,isShopOwner) => {
+export const editUser = (userId,firstName,lastName,email,address,telNumber,location,isDeliveryMan,isShopOwner) => {
     return async (dispatch) => {
         try{
             const userToken = await projectAuth.currentUser.getIdTokenResult(true);
@@ -124,7 +124,6 @@ export const editUser = (userId,firstName,lastName,email,address,telNumber,image
                 email: email,
                 address: address,
                 telNumber: telNumber,
-                imageUrl: imageUrl,
                 location: location,
                 isDeliveryMan: isDeliveryMan,
                 isShopOwner: isShopOwner
@@ -140,7 +139,6 @@ export const editUser = (userId,firstName,lastName,email,address,telNumber,image
                     email: email,
                     address: address,
                     telNumber: telNumber,
-                    imageUrl: imageUrl,
                     location: location,
                     isDeliveryMan: isDeliveryMan,
                     isShopOwner: isShopOwner

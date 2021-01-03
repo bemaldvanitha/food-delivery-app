@@ -6,7 +6,7 @@ import ShopItem from "../components/ShopItem";
 
 const PromotionScreen = (props) => {
     const promotionShops = useSelector(state => state.shop.shops).filter(shop => shop.offers !== '');
-    console.log(promotionShops);
+
     return(
         <View style={styles.screen}>
             <FlatList data={promotionShops} keyExtractor={(item,index) => item.id} renderItem={(data) => {

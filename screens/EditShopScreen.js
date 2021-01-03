@@ -7,11 +7,14 @@ import {useSelector,useDispatch} from 'react-redux';
 import {Colors} from '../constants/Colors';
 import {editShop,addShop} from '../store/actions/ShopAction';
 import Location from "../models/Location";
+import ImagePickers from "../components/ImagePicker";
+import {projectAuth,projectStorage} from '../firebase/firebase';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 const EditShopScreen = (props) => {
+    const userId = projectAuth.currentUser.uid;
     const dispatch = useDispatch();
     const currentShopId = props.navigation.getParam('shopId');
     const currentShop = useSelector(state => state.shop.shops).find(shop => shop.id === currentShopId);
@@ -27,12 +30,17 @@ const EditShopScreen = (props) => {
     const [isLocationValid,setIsLocationValid] = useState(!!currentShopId);
     const [isImageUrlValid,setIsImageUrlValid] = useState(!!currentShopId);
 
+    const [image,setImage] = useState();
+    const [loading,setLoading] = useState(false);
+
+    let url = '';
+
     useEffect(() => {
         props.navigation.setParams({'save': handleSubmit});
     },[dispatch,handleSubmit,shopDetail,shopName,shopLocation,shopImageUrl]);
 
     const handleSubmit = useCallback( () => {
-        if(isNameValid && isDetailValid && isLocationValid && isImageUrlValid){
+        if(isNameValid && isDetailValid && isLocationValid){
             if(!!currentShopId){
                 Alert.alert('are you sure','sure about editing',[
                     {text: 'no'},
@@ -44,10 +52,19 @@ const EditShopScreen = (props) => {
             }else{
                 Alert.alert('are you sure','sure about adding shop',[
                     {text: 'no'},
-                    {text: 'yes',onPress: () => {
-                            dispatch(addShop('u1',shopName,shopDetail,shopLocation,shopImageUrl,
-                                new Location(5.95401,80.554856)));
-                            props.navigation.navigate({routeName: 'shop'})
+                    {text: 'yes',onPress:async () => {
+                            setLoading(true);
+                            await handleUpload();
+
+                            setTimeout(() => {
+
+                                dispatch(addShop(userId,shopName,shopDetail,shopLocation,shopImageUrl,
+                                    new Location(5.95401,80.554856)));
+
+                                setLoading(false);
+                                props.navigation.navigate({routeName: 'shop'});
+
+                            },6000);
                         }}
                 ])
             }
@@ -57,6 +74,25 @@ const EditShopScreen = (props) => {
             ]);
         }
     },[shopName,shopDetail,shopImageUrl,shopLocation,dispatch]);
+
+    const handleUpload = async () => {
+        try{
+            const imageUrl = image.uri;
+            const imageName = imageUrl.split('/').pop();
+            const response = await fetch(imageUrl);
+            const uploadImage = await response.blob();
+
+            const ref = projectStorage.ref().child('shops').child(imageName);
+            await ref.put(uploadImage);
+            const downloadUrl = await ref.getDownloadURL();
+
+            url = downloadUrl;
+
+        }catch (err){
+            console.log(err);
+            throw err;
+        }
+    }
 
     const nameValidator = (text) => {
         setShopName(text);
@@ -88,7 +124,7 @@ const EditShopScreen = (props) => {
         }
     }
 
-    const imageUrlValidator = (text) => {
+    /*const imageUrlValidator = (text) => {
         setShopImageUrl(text);
 
         if(text.length > 6 && (text.includes('http') || text.includes('https') )){
@@ -96,6 +132,11 @@ const EditShopScreen = (props) => {
         }else{
             setIsImageUrlValid(false);
         }
+    }*/
+
+    const handleImage = (image) => {
+        setImage(image);
+        console.log(image);
     }
 
     return(
@@ -116,14 +157,18 @@ const EditShopScreen = (props) => {
                                keyboardType='default' />
                     {!isLocationValid && <Text style={styles.errorText}>enter valid location</Text>}
                 </View>
-                <View style={styles.imageContainer}>
+                {/*<View style={styles.imageContainer}>
                     <Image source={{uri: shopImageUrl}} style={styles.image}/>
                     <View>
                         <TextInput label='enter shop image' value={shopImageUrl} onChangeText={(text) => imageUrlValidator(text)} mode='flat'
                                    keyboardType='default' multiline={true} numberOfLines={4} style={styles.imageUrlInput}/>
                         {!isImageUrlValid && <Text style={styles.errorText}>enter valid image url</Text>}
                     </View>
+                </View>*/}
+                <View style={styles.imageContainer}>
+                    <ImagePickers handleImage={handleImage}/>
                 </View>
+
             </View>
         </ScrollView>
     )
@@ -153,8 +198,8 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     imageContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
+        //flexDirection: 'row',
+        //justifyContent: 'space-around',
         marginVertical: screenHeight * 0.02
     },
     imageUrlInput: {

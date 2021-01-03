@@ -9,7 +9,7 @@ const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 const ImagePickers = (props) => {
-    const [pickedImage,setPickedImage] = useState('');
+    const [pickedImage,setPickedImage] = useState('https://cdn.pixabay.com/photo/2018/11/13/21/43/instagram-3814049_960_720.png');
 
     const grantPermissions = async () => {
         const result = await Permissions.askAsync(Permissions.CAMERA,Permissions.CAMERA_ROLL);

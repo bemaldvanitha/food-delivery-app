@@ -11,118 +11,151 @@ import {deleteFood} from '../store/actions/FoodAction'
 import CardActions from "react-native-paper/src/components/Card/CardActions";
 import ChangeDiscountModal from "../components/ChangeDiscountModal";
 import ChangeOfferedCategoryModal from "../components/ChangeOfferedCategoryModal";
+import {projectAuth} from '../firebase/firebase';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 const ShopOwnerScreen = (props) => {
+    const userId = projectAuth.currentUser.uid;
     const dispatch = useDispatch();
     const [isModalShow,setIsModalShow] = useState(false);
     const [isOfferedModalShow,setIsOfferedModalShow] = useState(false);
-    const currentShop = useSelector(state => state.shop.shops).find(shop => shop.id === '-MPS5s6g6Ptrqwd7V1cA');
-    const shopFoods = useSelector(state => state.food.foods).filter(food => food.shopId === '-MPS5s6g6Ptrqwd7V1cA');
 
-    const selectedCategories  = [];
-    currentShop.offeredCategoryIds.map(id => {
-        const category = Categories.find(cat => cat.id === id);
-        selectedCategories.push(category);
-    });
+    const currentUser = useSelector(state => state.user.users).find(user => user.id === userId);
+    const isCurrentUserShopOwner = currentUser.isShopOwner;
 
-    const editProductHandler = (id) => {
-        props.navigation.navigate({routeName: 'shopDetail',params: {id: id}});
-    }
+    if(!isCurrentUserShopOwner){
 
-    const addProductHandler = () => {
-        props.navigation.navigate({routeName: 'shopDetail'});
-    }
+        return (
+            <View style={styles.centered}>
+                <Text style={styles.otherText}>this screen only for shop owners</Text>
+            </View>
+        )
 
-    const deleteProductHandler = (id) => {
-        dispatch(deleteFood(id));
-    }
+    }else{
 
-    const toggleModal = () => {
-        setIsModalShow(prevState => !prevState);
-    }
+        const isCurrentUserOwnsShop = useSelector(state => state.shop.shops).findIndex(shop => shop.uId === userId);
 
-    const toggleOfferedModal = () => {
-        setIsOfferedModalShow(prevState => !prevState);
-    }
+        if(isCurrentUserOwnsShop === -1){
 
-    const editShopDetail = () => {
-        props.navigation.navigate({routeName: 'editShop',params: {shopId: 's1'}})
-    }
-
-    return(
-        <ScrollView>
-            <Provider>
-                <View style={styles.screen}>
-                    <ChangeDiscountModal show={isModalShow} onDismiss={toggleModal} shopId={currentShop.id}/>
-
-                    <ChangeOfferedCategoryModal show={isOfferedModalShow} onDismiss={toggleOfferedModal} shopId={currentShop.id}
-                                                allOfferedCateGories={currentShop.offeredCategoryIds}/>
-
-                    <ImageBackground source={{uri: currentShop.imageUrl}} style={styles.image}>
-                        <TouchableOpacity onPress={editShopDetail}>
-                            <Text style={styles.name}>{currentShop.name}</Text>
-                        </TouchableOpacity>
-                    </ImageBackground>
-
-                    <View style={styles.detailContainer}>
-                        <Text style={styles.detailText}>{currentShop.detail}</Text>
-                    </View>
-                    <Divider/>
-
-                    <View style={styles.ratingContainer}>
-                        <StarRating disabled={true} rating={currentShop.rating} maxStars={5} fullStarColor='gold' starSize={32}/>
-                        <Text>({currentShop.ratedNumber})</Text>
-                    </View>
-                    <Divider/>
-
-                    <View style={styles.discountContainer}>
-                        <Text style={styles.discountText}>{currentShop.offers}</Text>
-                        <Button style={styles.discountButton} icon='pencil' mode='contained' color={Colors.primaryColor} onPress={toggleModal}>
-                            change
-                        </Button>
-                    </View>
-                    <Divider/>
-
-                    <View style={styles.offeredFoodContainer}>
-                        <FlatList data={selectedCategories} keyExtractor={(item,index) => item.id} numColumns={2} renderItem={(data) => {
-                            return(
-                                <Chip style={styles.offeredFoodChip} mode='outlined'
-                                      avatar={<Avatar.Image source={data.item.imageUrl} size={28}/>}>
-                                    <Text style={styles.offeredFoodText}>{data.item.name}</Text>
-                                </Chip>
-                            )
-                        }}/>
-                        <IconButton icon='pencil' size={28} color={Colors.primaryColor} onPress={toggleOfferedModal} animated={true}/>
-                    </View>
-
-                    <Divider/>
-                    <View>
-                        <FlatList data={shopFoods} horizontal={true} renderItem={(data) => {
-                            return(
-                                <Card elevation={5} style={styles.card}>
-                                    <Card.Title title={data.item.name} subtitle={data.item.description}/>
-                                    <Card.Content>
-                                        <Image style={styles.categoryImage} source={{uri: data.item.imageUrl}}/>
-                                    </Card.Content>
-                                    <CardActions style={styles.cardAction}>
-                                        <IconButton icon='delete' size={28} color={Colors.primaryColor}
-                                                    onPress={() => deleteProductHandler(data.item.id)} animated={true}/>
-                                        <IconButton icon='pencil' size={28} color={Colors.primaryColor}
-                                                    onPress={() => editProductHandler(data.item.id)} animated={true}/>
-                                    </CardActions>
-                                </Card>
-                            )
-                        }}/>
-                    </View>
-
-                    <FAB style={styles.fab} large icon='settings' onPress={addProductHandler}/>
+            return (
+                <View style={styles.centered}>
+                    <Ionicons name="md-add" size={50} color="red" onPress={() => {
+                        props.navigation.navigate({routeName: 'editShop'})
+                    }}/>
+                    <Text style={styles.otherText}>Add Shop</Text>
                 </View>
-            </Provider>
-        </ScrollView>
-    )
+            )
+
+        } else {
+
+            const currentShop = useSelector(state => state.shop.shops).find(shop => shop.id === '-MPS5s6g6Ptrqwd7V1cA');
+            const shopFoods = useSelector(state => state.food.foods).filter(food => food.shopId === '-MPS5s6g6Ptrqwd7V1cA');
+
+            const selectedCategories  = [];
+            currentShop.offeredCategoryIds.map(id => {
+                const category = Categories.find(cat => cat.id === id);
+                selectedCategories.push(category);
+            });
+
+            const editProductHandler = (id) => {
+                props.navigation.navigate({routeName: 'shopDetail',params: {id: id}});
+            }
+
+            const addProductHandler = () => {
+                props.navigation.navigate({routeName: 'shopDetail'});
+            }
+
+            const deleteProductHandler = (id) => {
+                dispatch(deleteFood(id));
+            }
+
+            const toggleModal = () => {
+                setIsModalShow(prevState => !prevState);
+            }
+
+            const toggleOfferedModal = () => {
+                setIsOfferedModalShow(prevState => !prevState);
+            }
+
+            const editShopDetail = () => {
+                props.navigation.navigate({routeName: 'editShop',params: {shopId: 's1'}})
+            }
+
+            return(
+                <ScrollView>
+                    <Provider>
+                        <View style={styles.screen}>
+                            <ChangeDiscountModal show={isModalShow} onDismiss={toggleModal} shopId={currentShop.id}/>
+
+                            <ChangeOfferedCategoryModal show={isOfferedModalShow} onDismiss={toggleOfferedModal} shopId={currentShop.id}
+                                                        allOfferedCateGories={currentShop.offeredCategoryIds}/>
+
+                            <ImageBackground source={{uri: currentShop.imageUrl}} style={styles.image}>
+                                <TouchableOpacity onPress={editShopDetail}>
+                                    <Text style={styles.name}>{currentShop.name}</Text>
+                                </TouchableOpacity>
+                            </ImageBackground>
+
+                            <View style={styles.detailContainer}>
+                                <Text style={styles.detailText}>{currentShop.detail}</Text>
+                            </View>
+                            <Divider/>
+
+                            <View style={styles.ratingContainer}>
+                                <StarRating disabled={true} rating={currentShop.rating} maxStars={5} fullStarColor='gold' starSize={32}/>
+                                <Text>({currentShop.ratedNumber})</Text>
+                            </View>
+                            <Divider/>
+
+                            <View style={styles.discountContainer}>
+                                <Text style={styles.discountText}>{currentShop.offers}</Text>
+                                <Button style={styles.discountButton} icon='pencil' mode='contained' color={Colors.primaryColor} onPress={toggleModal}>
+                                    change
+                                </Button>
+                            </View>
+                            <Divider/>
+
+                            <View style={styles.offeredFoodContainer}>
+                                <FlatList data={selectedCategories} keyExtractor={(item,index) => item.id} numColumns={2} renderItem={(data) => {
+                                    return(
+                                        <Chip style={styles.offeredFoodChip} mode='outlined'
+                                              avatar={<Avatar.Image source={data.item.imageUrl} size={28}/>}>
+                                            <Text style={styles.offeredFoodText}>{data.item.name}</Text>
+                                        </Chip>
+                                    )
+                                }}/>
+                                <IconButton icon='pencil' size={28} color={Colors.primaryColor} onPress={toggleOfferedModal} animated={true}/>
+                            </View>
+
+                            <Divider/>
+                            <View>
+                                <FlatList data={shopFoods} horizontal={true} renderItem={(data) => {
+                                    return(
+                                        <Card elevation={5} style={styles.card}>
+                                            <Card.Title title={data.item.name} subtitle={data.item.description}/>
+                                            <Card.Content>
+                                                <Image style={styles.categoryImage} source={{uri: data.item.imageUrl}}/>
+                                            </Card.Content>
+                                            <CardActions style={styles.cardAction}>
+                                                <IconButton icon='delete' size={28} color={Colors.primaryColor}
+                                                            onPress={() => deleteProductHandler(data.item.id)} animated={true}/>
+                                                <IconButton icon='pencil' size={28} color={Colors.primaryColor}
+                                                            onPress={() => editProductHandler(data.item.id)} animated={true}/>
+                                            </CardActions>
+                                        </Card>
+                                    )
+                                }}/>
+                            </View>
+
+                            <FAB style={styles.fab} large icon='settings' onPress={addProductHandler}/>
+                        </View>
+                    </Provider>
+                </ScrollView>
+            )
+        }
+    }
 }
 
 ShopOwnerScreen.navigationOptions = (navData) => {
@@ -233,6 +266,15 @@ const styles = StyleSheet.create({
     cardAction: {
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    centered: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    otherText: {
+        fontFamily: 'roboto-black',
+        fontSize: 18
     }
 })
 

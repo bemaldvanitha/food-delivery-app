@@ -1,15 +1,21 @@
 import React,{useState} from 'react';
 import {StyleSheet,Text,TextInput,Button,Dimensions,View} from 'react-native';
 import {Portal,Modal} from 'react-native-paper';
+import {useDispatch} from 'react-redux';
+
+import {projectAuth} from '../firebase/firebase';
+import {editAddress} from '../store/actions/UsersAction';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 const ChangePlaceModal = (props) => {
     const [address,setAddress] = useState('');
+    const userId = projectAuth.currentUser.uid;
+    const dispatch = useDispatch();
 
     const changeAddress = () => {
-
+        dispatch(editAddress(userId,address));
     }
 
     return(
@@ -20,7 +26,7 @@ const ChangePlaceModal = (props) => {
                     <TextInput value={address} onChangeText={(text) => setAddress(text)} style={style.input} placeholder='address'
                                keyboardType='default'/>
                 </View>
-                <Button title='edit Address' color='coral'/>
+                <Button title='edit Address' color='coral' onPress={changeAddress}/>
             </Modal>
         </Portal>
     )

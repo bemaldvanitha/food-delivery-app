@@ -9,6 +9,7 @@ export const TOGGLE_FAVORITE_FOODS = 'TOGGLE_FAVORITE_FOODS';
 export const EDIT_USER = 'EDIT_USER';
 export const FETCH_USERS = 'FETCH_USERS';
 export const ADD_USER = 'ADD_USER';
+export const EDIT_ADDRESS = 'EDIT_ADDRESS';
 
 export const toggleFavoriteShops = (userId,shopId,allFav,isFav) => {
     return async (dispatch) => {
@@ -190,5 +191,24 @@ export const addUser = (firstName,lastName,email,address,telNumber,imageUrl,loca
         }catch (err){
             throw err;
         }
+    }
+}
+
+export const editAddress = (userId,newAddress) => {
+    return async (dispatch) => {
+        const userToken = await projectAuth.currentUser.getIdTokenResult(true);
+        const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/user/${userId}.json`;
+
+        const response = await axios.patch(url,{
+            'address': newAddress
+        });
+
+        dispatch({
+            type: EDIT_ADDRESS,
+            payload: {
+                userId: userId,
+                newAddress: newAddress
+            }
+        });
     }
 }

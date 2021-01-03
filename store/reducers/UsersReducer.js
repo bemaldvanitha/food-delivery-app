@@ -1,7 +1,7 @@
 import {Users} from '../../Data/dummy-data';
 import User from '../../models/User';
 import Location from "../../models/Location";
-import {TOGGLE_FAVORITE_FOODS,TOGGLE_FAVORITE_SHOPS,EDIT_USER,FETCH_USERS,ADD_USER} from '../actions/UsersAction'
+import {TOGGLE_FAVORITE_FOODS,TOGGLE_FAVORITE_SHOPS,EDIT_USER,FETCH_USERS,ADD_USER,EDIT_ADDRESS} from '../actions/UsersAction'
 
 const initState = {
     users: [],
@@ -66,6 +66,15 @@ const UsersReducer = (state = initState,action) => {
                 [],[],action.payload.isDeliverMan,action.payload.isShopOwner);
 
             return {...state,users: action.payload.users.concat(newUser)}
+
+        case EDIT_ADDRESS:
+            const editAddressIndex = state.users.findIndex(user => user.id === action.payload.userId);
+            const editAddressUser = state.users.find(user => user.id === action.payload.userId);
+            editAddressUser.address = action.payload.newAddress;
+
+            const updatedNewList = [...state.users];
+            updatedNewList.splice(editAddressIndex,1);
+            return {...state,users: updatedNewList.concat(editAddressUser)}
 
         default: return state;
     }

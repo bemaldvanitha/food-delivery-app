@@ -7,6 +7,11 @@ const screenHeight = Dimensions.get('screen').height;
 
 const ChangePlaceModal = (props) => {
     const [address,setAddress] = useState('');
+
+    const changeAddress = () => {
+
+    }
+
     return(
         <Portal>
             <Modal visible={props.visibility} onDismiss={props.closeModal} contentContainerStyle={style.modalStyle}>

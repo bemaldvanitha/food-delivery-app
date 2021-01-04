@@ -32,9 +32,9 @@ const HomeScreen = (props) => {
                 <ActivityIndicator size='large' color={Colors.offerColor}/>
             </View>
         )
-    }
 
-    if(!isLoading) {
+    }else {
+
         return (
             <View style={styles.screen}>
                 <FlatList data={shops} keyExtractor={(item, index) => item.id} renderItem={(data) => {

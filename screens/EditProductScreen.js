@@ -15,6 +15,9 @@ const screenHeight = Dimensions.get('screen').height;
 
 const EditProductScreen = (props) => {
     const dispatch = useDispatch();
+    const userId = projectAuth.currentUser.uid;
+    const shopId = useSelector(state => state.shop.shops).find(shop => shop.uId === userId).id;
+
     const editProductId = props.navigation.getParam('id');
     const currentProduct = useSelector(state => state.food.foods).find(food => food.id === editProductId);
 
@@ -78,8 +81,8 @@ const EditProductScreen = (props) => {
                             setTimeout(() => {
 
                                 dispatch(
-                                    addFoods(categoryId,'s1',name,description,parseFloat(fullPortionPrice),
-                                        halfPotionAvailable ? parseFloat(halfPortionPrice) : 0,imageUrl,isVegan,isVegetarian,isSugarFree)
+                                    addFoods(categoryId,shopId,name,description,parseFloat(fullPortionPrice),
+                                        halfPotionAvailable ? parseFloat(halfPortionPrice) : 0,url,isVegan,isVegetarian,isSugarFree)
                                 );
                                 setIsLoading(false);
                                 props.navigation.goBack();
@@ -91,7 +94,7 @@ const EditProductScreen = (props) => {
         }
 
     },[dispatch,editProductId,categoryId,name,description,fullPortionPrice,halfPortionPrice,halfPotionAvailable,imageUrl,
-        isVegetarian,isVegan,isSugarFree]);
+        isVegetarian,isVegan,isSugarFree,url]);
 
     const handleUpload = async () => {
         try {
@@ -102,7 +105,7 @@ const EditProductScreen = (props) => {
 
             const ref = projectStorage.ref().child('products').child(imageName);
             await ref.put(uploadImage);
-            const downloadUrl = ref.getDownloadURL();
+            const downloadUrl = await ref.getDownloadURL();
 
             url = downloadUrl;
 

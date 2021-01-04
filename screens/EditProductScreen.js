@@ -5,7 +5,7 @@ import {useSelector,useDispatch} from 'react-redux';
 import {Ionicons} from '@expo/vector-icons';
 
 import {Categories} from '../Data/dummy-data';
-import PickerItem from "react-native-web/dist/exports/Picker/PickerItem";
+import ImagePickers from "../components/ImagePicker";
 import {Colors} from '../constants/Colors';
 import {editFood,addFoods} from '../store/actions/FoodAction';
 
@@ -35,6 +35,7 @@ const EditProductScreen = (props) => {
     const [isHalfPortionValid,setIsHalfPortionValid] = useState(!!editProductId);
     const [isFullPortionValid,setIsFullPortionValid] = useState(!!editProductId);
 
+    const [image,setImage] = useState();
 
     useEffect(() => {
         props.navigation.setParams({'save': saveHandler})
@@ -132,6 +133,10 @@ const EditProductScreen = (props) => {
         setFullPortionPrice(text);
     }
 
+    const handleImage = (image) => {
+        setImage(image);
+    }
+
     return(
         <ScrollView>
             <View style={styles.screen}>
@@ -167,14 +172,15 @@ const EditProductScreen = (props) => {
                         {!isHalfPortionValid && <Text style={styles.errorText}>enter valid price</Text>}
                     </View>
                 }
-                <View style={styles.imageUrlContainer}>
+                {/*<View style={styles.imageUrlContainer}>
                     <Image source={{uri: imageUrl}} style={styles.image}/>
                     <View>
                         <TextInput value={imageUrl} onChangeText={imageUrlValidator} keyboardType='default' label='enter image url'
                                    mode='flat' underlineColor='black' multiline={true} numberOfLines={4} style={styles.imageInput}/>
                         {!isImageUrlValid && <Text style={styles.errorText}>enter valid image url</Text>}
                     </View>
-                </View>
+                </View>*/}
+                <ImagePickers handleImage={handleImage}/>
 
                 <Picker style={styles.pickerContainer} mode='dropdown' selectedValue={categoryId} onValueChange={(val) => setCategoryId(val)}>
                     {

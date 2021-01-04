@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         margin: 0,
         right: screenWidth * 0.08,
-        top: screenHeight * 0.7,
+        top: screenHeight * 0.6,
         backgroundColor: Colors.primaryColor,
     },
     image: {

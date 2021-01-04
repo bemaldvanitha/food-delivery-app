@@ -1,5 +1,5 @@
 import React,{useState,useCallback,useEffect} from 'react';
-import {View,StyleSheet,Text,Switch,Image,Dimensions,ScrollView,FlatList,Picker,Alert} from 'react-native';
+import {View,StyleSheet,Text,Switch,Image,Dimensions,ScrollView,FlatList,Picker,Alert,ActivityIndicator} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {useSelector,useDispatch} from 'react-redux';
 import {Ionicons} from '@expo/vector-icons';
@@ -8,6 +8,7 @@ import {Categories} from '../Data/dummy-data';
 import ImagePickers from "../components/ImagePicker";
 import {Colors} from '../constants/Colors';
 import {editFood,addFoods} from '../store/actions/FoodAction';
+import {projectStorage,projectAuth} from '../firebase/firebase';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -36,6 +37,9 @@ const EditProductScreen = (props) => {
     const [isFullPortionValid,setIsFullPortionValid] = useState(!!editProductId);
 
     const [image,setImage] = useState();
+    const [isLoading,setIsLoading] = useState(false);
+
+    let url = '';
 
     useEffect(() => {
         props.navigation.setParams({'save': saveHandler})
@@ -44,7 +48,7 @@ const EditProductScreen = (props) => {
 
     const saveHandler = useCallback(() => {
         // console.log(isNameValid,isDescriptionValid,isFullPortionValid,isImageUrlValid)
-        if(!isNameValid || !isDescriptionValid || !isFullPortionValid || !isImageUrlValid ){
+        if(!isNameValid || !isDescriptionValid || !isFullPortionValid ){
             return(
                 Alert.alert('enter all fields','all field must enter before submit',[
                     {title: 'ok'}
@@ -60,25 +64,52 @@ const EditProductScreen = (props) => {
                                 editFood(editProductId,categoryId,name,description,parseFloat(fullPortionPrice),
                                     halfPotionAvailable ? parseFloat(halfPortionPrice) : 0,imageUrl,isVegan,isVegetarian,isSugarFree)
                             );
+                            props.navigation.goBack();
                         }}
                 ]);
 
             }else{
                 Alert.alert('sure about add','are you sure about add product',[
                     {text: 'no'},
-                    {text: 'yes',onPress: () => {
-                            dispatch(
-                                addFoods(categoryId,'s1',name,description,parseFloat(fullPortionPrice),
-                                    halfPotionAvailable ? parseFloat(halfPortionPrice) : 0,imageUrl,isVegan,isVegetarian,isSugarFree)
-                            );
+                    {text: 'yes',onPress: async () => {
+                            setIsLoading(true);
+                            await handleUpload();
+
+                            setTimeout(() => {
+
+                                dispatch(
+                                    addFoods(categoryId,'s1',name,description,parseFloat(fullPortionPrice),
+                                        halfPotionAvailable ? parseFloat(halfPortionPrice) : 0,imageUrl,isVegan,isVegetarian,isSugarFree)
+                                );
+                                setIsLoading(false);
+                                props.navigation.goBack();
+
+                            },6000);
                         }}
                 ]);
             }
-            props.navigation.goBack();
         }
 
     },[dispatch,editProductId,categoryId,name,description,fullPortionPrice,halfPortionPrice,halfPotionAvailable,imageUrl,
         isVegetarian,isVegan,isSugarFree]);
+
+    const handleUpload = async () => {
+        try {
+            const imageUrl = image.uri;
+            const imageName = imageUrl.split('/').pop();
+            const response = await fetch(imageUrl);
+            const uploadImage = await response.blob();
+
+            const ref = projectStorage.ref().child('products').child(imageName);
+            await ref.put(uploadImage);
+            const downloadUrl = ref.getDownloadURL();
+
+            url = downloadUrl;
+
+        }catch (err){
+            throw err;
+        }
+    }
 
     const nameValidator = (text) => {
         if(text.trim().length < 6){
@@ -135,6 +166,14 @@ const EditProductScreen = (props) => {
 
     const handleImage = (image) => {
         setImage(image);
+    }
+
+    if(isLoading){
+        return (
+            <View style={styles.centered}>
+                <ActivityIndicator size='large' color={Colors.offerColor}/>
+            </View>
+        )
     }
 
     return(
@@ -268,6 +307,10 @@ const styles = StyleSheet.create({
     errorText: {
         color: Colors.primaryColor,
         paddingHorizontal: screenWidth * 0.1
+    },
+    centered: {
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 })
 

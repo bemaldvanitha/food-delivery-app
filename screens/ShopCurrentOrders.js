@@ -2,10 +2,13 @@ import React from 'react';
 import {View,StyleSheet,FlatList} from 'react-native';
 import {useSelector} from 'react-redux';
 
+import {projectAuth} from '../firebase/firebase';
 import ShopOrderedItem from "../components/ShopOrderedItem";
 
 const ShopCurrentOrders = (props) => {
-    const shopOrders = useSelector(state => state.order.orders).filter((order => order.shopId === '-MPS5s6g6Ptrqwd7V1cA'));
+    const userId = projectAuth.currentUser.uid;
+    const ownedShopId = useSelector(state => state.shop.shops).find(shop => shop.uId === userId).id;
+    const shopOrders = useSelector(state => state.order.orders).filter((order => order.shopId === ownedShopId));
 
     return(
         <View>

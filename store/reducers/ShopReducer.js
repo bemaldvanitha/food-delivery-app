@@ -35,7 +35,6 @@ const ShopReducer = (state = initState,action) => {
             editShop.name = action.payload.name;
             editShop.detail = action.payload.detail;
             editShop.locationName = action.payload.locationName;
-            editShop.imageUrl = action.payload.imageUrl;
 
             const updatedShopList = [...state.shops];
             updatedShopList.splice(editShopIndex,1);

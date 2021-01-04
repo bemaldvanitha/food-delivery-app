@@ -88,7 +88,7 @@ export const changeOfferedCategories = (shopId,catId,allOfferedCatIds) => {
     }
 }
 
-export const editShop = (shopId,name,detail,locationName,imageUrl) => {
+export const editShop = (shopId,name,detail,locationName) => {
     return async (dispatch) => {
         const token = await projectAuth.currentUser.getIdTokenResult(true);
         const url = `https://food-delivery-2dc43-default-rtdb.firebaseio.com/shops/${shopId}.json?auth=${token.token}`;
@@ -97,7 +97,6 @@ export const editShop = (shopId,name,detail,locationName,imageUrl) => {
                 'name': name,
                 'detail': detail,
                 'locationName': locationName,
-                'imageUrl': imageUrl
             })
             const resData = await response.data;
 
@@ -108,7 +107,6 @@ export const editShop = (shopId,name,detail,locationName,imageUrl) => {
                     name: name,
                     detail: detail,
                     locationName: locationName,
-                    imageUrl: imageUrl
                 }
             });
 

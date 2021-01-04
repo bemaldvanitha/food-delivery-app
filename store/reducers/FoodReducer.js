@@ -13,7 +13,7 @@ const FoodReducer = (state = initState,action) => {
             const editFood = state.foods.find(food => food.id === action.payload.id);
 
             const updatedFood = new FoodItem(editFood.id,action.payload.catId,editFood.shopId,action.payload.name,action.payload.description,
-                action.payload.fullPortionPrice,action.payload.halfPortionPrice,action.payload.imageUrl,editFood.rating,editFood.ratedNumber,
+                action.payload.fullPortionPrice,action.payload.halfPortionPrice,editFood.imageUrl,editFood.rating,editFood.ratedNumber,
                 action.payload.isVegan,action.payload.isVegetarian,action.payload.isSugarFree);
 
             const newFoodList = [...state.foods];

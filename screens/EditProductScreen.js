@@ -23,8 +23,6 @@ const EditProductScreen = (props) => {
 
     const [name,setName] = useState( editProductId ? currentProduct.name :'');
     const [description,setDescription] = useState(editProductId ? currentProduct.description : '');
-    const [imageUrl,setImageUrl] = useState(editProductId ? currentProduct.imageUrl :
-        'https://cdn.pixabay.com/photo/2015/03/26/09/39/cupcakes-690040_1280.jpg');
     const [halfPotionAvailable,setHalfPortionAvailable] = useState(!!(editProductId && currentProduct.halfPortionPrice !== 0));
     const [halfPortionPrice,setHalfPortionPrice] = useState(editProductId ? currentProduct.halfPortionPrice.toString() : '');
     const [fullPortionPrice,setFullPortionPrice] = useState(editProductId ? currentProduct.fullPortionPrice.toString() : '');
@@ -35,7 +33,6 @@ const EditProductScreen = (props) => {
 
     const [isNameValid,setIsNameValid] = useState(!!editProductId);
     const [isDescriptionValid,setIsDescriptionValid] = useState(!!editProductId);
-    const [isImageUrlValid,setIsImageUrlValid] = useState(!!editProductId);
     const [isHalfPortionValid,setIsHalfPortionValid] = useState(!!editProductId);
     const [isFullPortionValid,setIsFullPortionValid] = useState(!!editProductId);
 
@@ -46,11 +43,11 @@ const EditProductScreen = (props) => {
 
     useEffect(() => {
         props.navigation.setParams({'save': saveHandler})
-    },[dispatch,editProductId,categoryId,name,description,fullPortionPrice,halfPortionPrice,halfPotionAvailable,imageUrl,
+    },[dispatch,editProductId,categoryId,name,description,fullPortionPrice,halfPortionPrice,halfPotionAvailable,
         isVegetarian,isVegan,isSugarFree,saveHandler]);
 
     const saveHandler = useCallback(() => {
-        // console.log(isNameValid,isDescriptionValid,isFullPortionValid,isImageUrlValid)
+        // console.log(isNameValid,isDescriptionValid,isFullPortionValid)
         if(!isNameValid || !isDescriptionValid || !isFullPortionValid ){
             return(
                 Alert.alert('enter all fields','all field must enter before submit',[
@@ -65,7 +62,7 @@ const EditProductScreen = (props) => {
                     {text: 'yes',onPress: () => {
                             dispatch(
                                 editFood(editProductId,categoryId,name,description,parseFloat(fullPortionPrice),
-                                    halfPotionAvailable ? parseFloat(halfPortionPrice) : 0,imageUrl,isVegan,isVegetarian,isSugarFree)
+                                    halfPotionAvailable ? parseFloat(halfPortionPrice) : 0,isVegan,isVegetarian,isSugarFree)
                             );
                             props.navigation.goBack();
                         }}
@@ -93,7 +90,7 @@ const EditProductScreen = (props) => {
             }
         }
 
-    },[dispatch,editProductId,categoryId,name,description,fullPortionPrice,halfPortionPrice,halfPotionAvailable,imageUrl,
+    },[dispatch,editProductId,categoryId,name,description,fullPortionPrice,halfPortionPrice,halfPotionAvailable,
         isVegetarian,isVegan,isSugarFree,url]);
 
     const handleUpload = async () => {
@@ -130,15 +127,6 @@ const EditProductScreen = (props) => {
             setIsDescriptionValid(true);
         }
         setDescription(text)
-    }
-
-    const imageUrlValidator = (text) => {
-        if(text.trim().length > 7 && (text.includes('http') || text.includes('https') )){
-            setIsImageUrlValid(true);
-        }else{
-            setIsImageUrlValid(false);
-        }
-        setImageUrl(text);
     }
 
     const halfPortionValidator = (text) => {
@@ -214,15 +202,10 @@ const EditProductScreen = (props) => {
                         {!isHalfPortionValid && <Text style={styles.errorText}>enter valid price</Text>}
                     </View>
                 }
-                {/*<View style={styles.imageUrlContainer}>
-                    <Image source={{uri: imageUrl}} style={styles.image}/>
-                    <View>
-                        <TextInput value={imageUrl} onChangeText={imageUrlValidator} keyboardType='default' label='enter image url'
-                                   mode='flat' underlineColor='black' multiline={true} numberOfLines={4} style={styles.imageInput}/>
-                        {!isImageUrlValid && <Text style={styles.errorText}>enter valid image url</Text>}
-                    </View>
-                </View>*/}
-                <ImagePickers handleImage={handleImage}/>
+
+                {
+                    editProductId === undefined && <ImagePickers handleImage={handleImage}/>
+                }
 
                 <Picker style={styles.pickerContainer} mode='dropdown' selectedValue={categoryId} onValueChange={(val) => setCategoryId(val)}>
                     {

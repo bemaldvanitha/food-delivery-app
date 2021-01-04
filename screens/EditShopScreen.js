@@ -1,5 +1,5 @@
 import React,{useState,useEffect,useCallback} from 'react';
-import {View,StyleSheet,Text,ScrollView,Image,Dimensions,Platform,Alert} from 'react-native';
+import {View,StyleSheet,Text,ScrollView,Image,Dimensions,Platform,Alert,ActivityIndicator} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {Ionicons} from '@expo/vector-icons';
 import {useSelector,useDispatch} from 'react-redux';
@@ -22,13 +22,10 @@ const EditShopScreen = (props) => {
     const [shopName,setShopName] = useState(!!currentShopId ? currentShop.name : '');
     const [shopDetail,setShopDetail] = useState(!!currentShopId ? currentShop.detail : '');
     const [shopLocation,setShopLocation] = useState(!!currentShopId ? currentShop.locationInString : '');
-    const [shopImageUrl,setShopImageUrl] = useState(!!currentShopId ? currentShop.imageUrl :
-        'https://cdn.pixabay.com/photo/2016/11/29/05/07/baked-goods-1867459_1280.jpg');
 
     const [isNameValid,setIsNameValid] = useState(!!currentShopId);
     const [isDetailValid,setIsDetailValid] = useState(!!currentShopId);
     const [isLocationValid,setIsLocationValid] = useState(!!currentShopId);
-    const [isImageUrlValid,setIsImageUrlValid] = useState(!!currentShopId);
 
     const [image,setImage] = useState();
     const [loading,setLoading] = useState(false);
@@ -37,7 +34,7 @@ const EditShopScreen = (props) => {
 
     useEffect(() => {
         props.navigation.setParams({'save': handleSubmit});
-    },[dispatch,handleSubmit,shopDetail,shopName,shopLocation,shopImageUrl]);
+    },[dispatch,handleSubmit,shopDetail,shopName,shopLocation]);
 
     const handleSubmit = useCallback( () => {
         if(isNameValid && isDetailValid && isLocationValid){
@@ -45,7 +42,7 @@ const EditShopScreen = (props) => {
                 Alert.alert('are you sure','sure about editing',[
                     {text: 'no'},
                     {text: 'yes',onPress: () => {
-                            dispatch(editShop(currentShopId,shopName,shopDetail,shopLocation,shopImageUrl));
+                            dispatch(editShop(currentShopId,shopName,shopDetail,shopLocation));
                             props.navigation.goBack();
                         }}
                 ])
@@ -58,7 +55,7 @@ const EditShopScreen = (props) => {
 
                             setTimeout(() => {
 
-                                dispatch(addShop(userId,shopName,shopDetail,shopLocation,shopImageUrl,
+                                dispatch(addShop(userId,shopName,shopDetail,shopLocation,url,
                                     new Location(5.95401,80.554856)));
 
                                 setLoading(false);
@@ -73,7 +70,7 @@ const EditShopScreen = (props) => {
                 {text: 'ok'}
             ]);
         }
-    },[shopName,shopDetail,shopImageUrl,shopLocation,dispatch]);
+    },[shopName,shopDetail,shopLocation,dispatch]);
 
     const handleUpload = async () => {
         try{
@@ -124,19 +121,8 @@ const EditShopScreen = (props) => {
         }
     }
 
-    /*const imageUrlValidator = (text) => {
-        setShopImageUrl(text);
-
-        if(text.length > 6 && (text.includes('http') || text.includes('https') )){
-            setIsImageUrlValid(true);
-        }else{
-            setIsImageUrlValid(false);
-        }
-    }*/
-
     const handleImage = (image) => {
         setImage(image);
-        console.log(image);
     }
 
     return(
@@ -157,14 +143,7 @@ const EditShopScreen = (props) => {
                                keyboardType='default' />
                     {!isLocationValid && <Text style={styles.errorText}>enter valid location</Text>}
                 </View>
-                {/*<View style={styles.imageContainer}>
-                    <Image source={{uri: shopImageUrl}} style={styles.image}/>
-                    <View>
-                        <TextInput label='enter shop image' value={shopImageUrl} onChangeText={(text) => imageUrlValidator(text)} mode='flat'
-                                   keyboardType='default' multiline={true} numberOfLines={4} style={styles.imageUrlInput}/>
-                        {!isImageUrlValid && <Text style={styles.errorText}>enter valid image url</Text>}
-                    </View>
-                </View>*/}
+
                 <View style={styles.imageContainer}>
                     <ImagePickers handleImage={handleImage}/>
                 </View>

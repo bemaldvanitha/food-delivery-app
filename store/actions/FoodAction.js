@@ -82,7 +82,7 @@ export const addFoods = (catId,shopId,name,description,fullPortionPrice,halfPort
     }
 }
 
-export const editFood = (id,catId,name,description,fullPortionPrice,halfPortionPrice,imageUrl,isVegan,isVegetarian,isSugarFree) => {
+export const editFood = (id,catId,name,description,fullPortionPrice,halfPortionPrice,isVegan,isVegetarian,isSugarFree) => {
     console.log(description);
     return async (dispatch) => {
         const userToken = await projectAuth.currentUser.getIdTokenResult(true);
@@ -94,7 +94,6 @@ export const editFood = (id,catId,name,description,fullPortionPrice,halfPortionP
                 'description': description,
                 'fullPortionPrice': fullPortionPrice,
                 'halfPortionPrice': halfPortionPrice,
-                'imageUrl': imageUrl,
                 'isVegan': isVegan,
                 'isVegetarian': isVegetarian,
                 'isSugarFree': isSugarFree
@@ -109,7 +108,6 @@ export const editFood = (id,catId,name,description,fullPortionPrice,halfPortionP
                     description: description,
                     fullPortionPrice: fullPortionPrice,
                     halfPortionPrice: halfPortionPrice,
-                    imageUrl: imageUrl,
                     isVegan: isVegan,
                     isVegetarian: isVegetarian,
                     isSugarFree: isSugarFree

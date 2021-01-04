@@ -80,7 +80,7 @@ const ShopOwnerScreen = (props) => {
             }
 
             const editShopDetail = () => {
-                props.navigation.navigate({routeName: 'editShop',params: {shopId: 's1'}})
+                props.navigation.navigate({routeName: 'editShop',params: {shopId: currentShop.id}})
             }
 
             return(

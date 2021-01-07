@@ -25,7 +25,7 @@ const HomeScreen = (props) => {
 
         setTimeout(() => {
             setIsLoading(false);
-        },2000);
+        },4000);
 
     },[dispatch])
 

@@ -7,11 +7,11 @@ import {Colors} from "../constants/Colors";
 import DeliveryItem from "../components/DeliveryItem";
 
 const DeliverScreen = (props) => {
-    const currentNonDeliveredOrders = useSelector(state => state.order.orders).filter((order) => {
+    const currentNonDeliveredOrders = useSelector(state => state.order.orders)/*.filter((order) => {
         if(order.isDeliverAccept === false && order.isShopAccept){
          return true;
         }
-    });
+    });*/
 
     return(
         <View style={styles.screen}>

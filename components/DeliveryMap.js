@@ -9,12 +9,13 @@ const DeliveryMap = (props) => {
     const toLocation = props.toLocation;
     const type = props.type;
 
-    const imageUrl1 = `https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/static/pin-l-bicycle+d90d0d(${location.lng},${location.lat}),pin-l-restaurant+43d676(${toLocation.lng},${toLocation.lat})/${location.lng},${location.lat},12,0/600x500@2x?access_token=pk.eyJ1IjoiYmVtYWxkdmFuaXRoYSIsImEiOiJja2M3MmRrZmgwZ3Q5MnpwOG1mY2tyaGZyIn0.pCTpNJ9P0idzkGsYp2t8dw`;
-    const imageUrl2 = `https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/static/pin-l-bicycle+d90d0d(${location.lng},${location.lat}),pin-l-village+43d676(${toLocation.lng},${toLocation.lat})/${location.lng},${location.lat},12,0/600x500@2x?access_token=pk.eyJ1IjoiYmVtYWxkdmFuaXRoYSIsImEiOiJja2M3MmRrZmgwZ3Q5MnpwOG1mY2tyaGZyIn0.pCTpNJ9P0idzkGsYp2t8dw`;
+    const imageUrl1 = `https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/static/pin-s-bicycle+46f67b(${location.lng},${location.lat}),pin-s-restaurant+fb5050(${toLocation.longitude},${toLocation.latitude})/${location.lng},${location.lat},13,0/600x300@2x?access_token=pk.eyJ1IjoiYmVtYWxkdmFuaXRoYSIsImEiOiJja2M3MmRrZmgwZ3Q5MnpwOG1mY2tyaGZyIn0.pCTpNJ9P0idzkGsYp2t8dw`;
+
+    const imageUrl2 = `https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/static/pin-l-bicycle+d90d0d(${location.lng},${location.lat}),pin-l-village+43d676(${toLocation.longitude},${toLocation.latitude})/${location.lng},${location.lat},12,0/600x500@2x?access_token=pk.eyJ1IjoiYmVtYWxkdmFuaXRoYSIsImEiOiJja2M3MmRrZmgwZ3Q5MnpwOG1mY2tyaGZyIn0.pCTpNJ9P0idzkGsYp2t8dw`;
 
     return(
         <View style={styles.imageContainer}>
-            <Image style={styles.image} source={{uri: type === 'shop' ? imageUrl1 : imageUrl2}}/>
+            {<Image style={styles.image} source={{uri: type === 'shop' ? imageUrl1 : imageUrl2}}/>}
         </View>
     )
 }

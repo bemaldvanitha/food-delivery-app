@@ -29,7 +29,7 @@ const OrderDetailScreen = (props) => {
             <View style={styles.statusContainer}>
                 <Text style={styles.statusText}>Status:</Text>
                 <OrderStatus isShopAccept={currentOrder.isShopAccept} isShopCompleted={currentOrder.isShopCompleted}
-                             isDeliverAccept={currentOrder.isDeliverAccept} isDeliverCompleted={props.isDeliverCompleted}/>
+                             isDeliverAccept={currentOrder.isDeliverAccept} isDeliverCompleted={currentOrder.isDeliverCompleted}/>
             </View>
             <OrderMap userLocation={currentOrder.userLocation} shopLocation={currentOrder.shopLocation}/>
             <View>

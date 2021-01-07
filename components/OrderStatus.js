@@ -2,25 +2,21 @@ import React from 'react';
 import {Image,Text,View,StyleSheet,Dimensions} from 'react-native';
 
 const OrderStatus = (props) => {
-    if(props.isShopAccept){
+    console.log(props.isShopAccept);
+    console.log(props.isShopCompleted);
+    console.log(props.isDeliverAccept);
+    console.log(props.isDeliverCompleted);
+
+    if(props.isShopAccept && props.isShopCompleted && props.isDeliverAccept && props.isDeliverCompleted){
         return (
             <View style={styles.box}>
-                <Image source={require('../assets/images/order/cooking.png')} style={styles.image}/>
-                <Text style={styles.text}>Cooking</Text>
+                <Image source={require('../assets/images/order/deliveryFinish.png')} style={styles.image}/>
+                <Text style={styles.text}>Deliver Finish</Text>
             </View>
         )
     }
 
-    if(props.isShopCompleted){
-        return (
-            <View style={styles.box}>
-                <Image source={require('../assets/images/order/cookCompleted.png')} style={styles.image}/>
-                <Text style={styles.text}>Cook Finish</Text>
-            </View>
-        )
-    }
-
-    if(props.isDeliverAccept){
+    if(props.isShopAccept && props.isShopCompleted && props.isDeliverAccept && !props.isDeliverCompleted){
         return (
             <View style={styles.box}>
                 <Image source={require('../assets/images/order/delivering.png')} style={styles.image}/>
@@ -29,11 +25,20 @@ const OrderStatus = (props) => {
         )
     }
 
-    if(props.isDeliverCompleted){
+    if(props.isShopAccept && props.isShopCompleted && !props.isDeliverAccept && !props.isDeliverCompleted){
         return (
             <View style={styles.box}>
-                <Image source={require('../assets/images/order/deliveryFinish.png')} style={styles.image}/>
-                <Text style={styles.text}>Deliver Finish</Text>
+                <Image source={require('../assets/images/order/cookCompleted.png')} style={styles.image}/>
+                <Text style={styles.text}>Cook Finish</Text>
+            </View>
+        )
+    }
+
+    if(props.isShopAccept && !props.isShopCompleted && !props.isDeliverAccept && !props.isDeliverCompleted){
+        return (
+            <View style={styles.box}>
+                <Image source={require('../assets/images/order/cooking.png')} style={styles.image}/>
+                <Text style={styles.text}>Cooking</Text>
             </View>
         )
     }

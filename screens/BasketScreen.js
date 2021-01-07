@@ -4,14 +4,16 @@ import {useSelector} from 'react-redux';
 
 import BasketItem from "../components/BasketItem";
 import {Colors} from '../constants/Colors';
+import {projectAuth} from '../firebase/firebase';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
 const BasketScreen = (props) => {
+    const userId = projectAuth.currentUser.uid;
     const basket = useSelector(state => state.basket.basket);
     const shop = useSelector(state => state.shop.shops);
-    const curUser = useSelector(state => state.user.users).find(user => user.id === 'u1');
+    const curUser = useSelector(state => state.user.users).find(user => user.id === userId);
     let selShop = shop[0];
 
     if(basket.length !== 0 ){

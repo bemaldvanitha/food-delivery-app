@@ -99,6 +99,7 @@ export const fetchUsers = () => {
 
                 allUsers.push(user);
             }
+            console.log(allUsers)
 
             dispatch({
                type: FETCH_USERS,

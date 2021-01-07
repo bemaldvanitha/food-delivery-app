@@ -23,18 +23,22 @@ const HomeScreen = (props) => {
         dispatch(fetchFoods());
         dispatch(fetchOrders());
 
-        setIsLoading(false);
+        setTimeout(() => {
+            setIsLoading(false);
+        },2000);
+
     },[dispatch])
 
-    if(isLoading){
+    if(isLoading || shops.length === 0){
         return (
             <View style={styles.centered}>
                 <ActivityIndicator size='large' color={Colors.offerColor}/>
             </View>
         )
 
-    }else {
+    }else  if(shops.length !== 0){
 
+        //console.log(useState(state => state));
         return (
             <View style={styles.screen}>
                 <FlatList data={shops} keyExtractor={(item, index) => item.id} renderItem={(data) => {
